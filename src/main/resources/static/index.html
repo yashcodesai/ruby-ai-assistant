@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RUBY AI - SAXENA INDUSTRIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+
+<div id="bootScreen">
+
+  <div class="boot-container">
+
+    <h1>Ý̴̥͙̘̇̈́̇̃͒̿́͘͘͝͝ͅĄ̵̺̰̻̻͔͇͓̈́̓͛̏̈́͌͋̄̑͆̏Ś̸͙̺̥̰̯͙̭͆̏͂Ḩ̵̛̘̤͙͔̝̫̖̻̦̞͙̺̅̿͘͝ I̸̺̺͎̰̥̜̯̼̮̰͖̜͂͆̿̈́̿̔N̸̡̧͕͙̼̻̳̦̪̞̯͎̦͓̏̒͌͑͒͊̾͌̑̅̕͝ͅḐ̷̮̳̣̟͉͋͗̓̕͜U̴̡̢̱̳̳͓̗͔̮̔͜͜͜Ś̸͙̺̥̰̯͙̭͆̏͂T̷̡̧̬̲̭̦̘̩̊̉͛̓̓̌͌̕Ŗ̷͇̙̰̭̪̟̺̲̜̹͔̎̍́ͅI̸̺̺͎̰̥̜̯̼̮̰͖̜͂͆̿̈́̿̔Ȩ̸̪̯̗̘̥̣̲̣̣͍͚͙̥̩́̀̈̆͑Ś̸͙̺̥̰̯͙̭͆̏͂ </h1>
+
+    <div id="bootText"></div>
+
+    <div class="progress-wrapper">
+
+      <div id="progressBar"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MAIN UI -->
+
+<div id="mainUI">
+
+  <canvas id="neuralCanvas"></canvas>
+
+  <header class="topbar">
+
+    <div class="brand">
+      𝒀𝑨𝑺𝑯 𝑰𝑵𝑫𝑼𝑺𝑻𝑹𝑰𝑬𝑺
+    </div>
+
+    <div class="status">
+
+      <span class="dot"></span>
+
+      RUBY ONLINE
+
+    </div>
+
+  </header>
+
+  <div class="layout">
+
+    <!-- LEFT PANEL -->
+
+    <aside class="panel">
+
+      <h3>SYSTEM STATUS</h3>
+
+      <div class="status-section">
+
+        <h4>AI CORE</h4>
+
+        <p>CORE STATUS ...... ONLINE</p>
+
+        <p>VOICE ENGINE ..... ACTIVE</p>
+
+        <p>MICROPHONE ....... READY</p>
+
+        <p>SPEECH OUTPUT .... CONNECTED</p>
+
+      </div>
+
+      <div class="status-section">
+
+        <h4>PERFORMANCE</h4>
+
+        <p>
+          CPU LOAD .........
+          <span id="cpuLoad">18%</span>
+        </p>
+
+        <p>
+          MEMORY USAGE .....
+          <span id="memoryUsage">34%</span>
+        </p>
+
+        <p>
+          NETWORK ..........
+          ONLINE
+        </p>
+
+        <p>
+          LATENCY ..........
+          <span id="latency">12ms</span>
+        </p>
+
+      </div>
+
+      <div class="status-section">
+
+        <h4>MISSION DATA</h4>
+
+        <p>
+          UPTIME ...........
+          <span id="uptime">
+                        00:00:00
+                    </span>
+        </p>
+
+        <p>
+          MODE .............
+          ASSISTANT
+        </p>
+
+        <p>
+          SECURITY .........
+          MAXIMUM
+        </p>
+
+        <p>
+          VERSION ..........
+          RUBY v1.0
+        </p>
+
+      </div>
+
+    </aside>
+
+    <!-- CENTER -->
+
+    <main class="center">
+
+      <div class="reactor">
+
+        <div class="ring outer"></div>
+
+        <div class="ring middle"></div>
+
+        <div class="ring inner"></div>
+
+        <div class="ring energy"></div>
+
+        <div class="core">
+
+          <div class="core-title">
+
+            𝐑𝐔𝐁𝐘
+
+          </div>
+
+          <div
+                  class="core-status"
+                  id="coreStatus">
+
+            STANDBY
+
+          </div>
+
+        </div>
+
+        <div class="voice-wave">
+
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+
+        </div>
+
+      </div>
+
+      <button id="listenBtn">
+
+        ACTIVATE
+
+      </button>
+
+    </main>
+
+    <!-- RIGHT PANEL -->
+
+    <aside class="panel">
+
+      <h3>LIVE DATA</h3>
+
+      <div id="clock"></div>
+
+      <div class="radar">
+
+        <div class="sweep"></div>
+
+        <div id="blips"></div>
+
+      </div>
+
+      <div class="live-section">
+
+        <p>
+          TEMPERATURE .....
+          24°C
+        </p>
+
+        <p>
+          LOCATION ........
+          INDIA
+        </p>
+
+        <p>
+          VOICE STATUS ....
+          ACTIVE
+        </p>
+
+        <p>
+          AI STATUS .......
+          ONLINE
+        </p>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- CONSOLE -->
+
+  <section class="console">
+
+    <h3>COMMAND HISTORY</h3>
+
+    <div id="response">
+
+      Awaiting Command...
+
+    </div>
+
+    <div id="history"></div>
+
+  </section>
+
+</div>
+
+<audio id="startupSound" preload="auto">
+  <source src="/sounds/startup.mp3" type="audio/mpeg">
+</audio>
+
+<script src="hud.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,705 @@
+/* BOOT SCREEN */
+
+#bootScreen{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#000;
+
+    z-index:9999;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+}
+
+.boot-container{
+
+    width:700px;
+
+    text-align:center;
+}
+
+.boot-container h1{
+
+    color:#ffb400;
+
+    font-size:48px;
+
+    margin-bottom:40px;
+
+    text-shadow:
+            0 0 20px #ffb400;
+}
+
+#bootText{
+
+    min-height:180px;
+
+    text-align:left;
+
+    color:#ff3b1f;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+.progress-wrapper{
+
+    width:100%;
+
+    height:12px;
+
+    margin-top:30px;
+
+    border:
+            1px solid #ffb400;
+}
+
+#progressBar{
+
+    width:0%;
+
+    height:100%;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #ff3b1f,
+                    #ffb400
+            );
+
+    transition:.3s;
+}
+
+/* MAIN UI */
+
+#mainUI{
+
+    opacity:0;
+
+    transition:1s;
+}:root{
+
+    --red:#ff3b1f;
+    --gold:#ffb400;
+    --orange:#ff6b00;
+    --bg:#020202;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    font-family:'Orbitron',sans-serif;
+    height:100vh;
+    overflow:hidden;
+
+    display:grid;
+    grid-template-rows:80px 1fr 180px;
+}
+
+/* Neural Background */
+
+#neuralCanvas{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+/* Hex Grid Overlay */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-1;
+
+    opacity:.04;
+
+    background-image:
+            linear-gradient(30deg,#ffb400 1px,transparent 1px),
+            linear-gradient(-30deg,#ffb400 1px,transparent 1px);
+
+    background-size:40px 40px;
+}
+
+/* Header */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 40px;
+
+    border-bottom:1px solid rgba(255,180,0,.15);
+}
+
+.brand{
+
+    color:var(--gold);
+
+    font-size:32px;
+
+    font-weight:900;
+
+    letter-spacing:4px;
+
+    text-shadow:0 0 10px var(--gold);
+}
+
+.status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.dot{
+
+    width:12px;
+    height:12px;
+
+    border-radius:50%;
+
+    background:var(--red);
+
+    box-shadow:
+            0 0 12px var(--red);
+
+    animation:pulseDot 1.2s infinite;
+}
+
+/* Main Layout */
+
+.layout{
+
+    display:grid;
+
+    grid-template-columns:
+            280px
+            1fr
+            280px;
+
+    gap:20px;
+
+    padding:20px;
+
+    min-height:0;
+}
+
+/* Panels */
+
+.panel{
+
+    background:
+            rgba(255,255,255,.03);
+
+    border:
+            1px solid rgba(255,180,0,.15);
+
+    backdrop-filter:blur(10px);
+
+    padding:20px;
+
+    overflow-y:auto;
+}
+
+.panel h3{
+
+    color:var(--gold);
+
+    margin-bottom:20px;
+
+    border-bottom:
+            1px solid rgba(255,180,0,.15);
+
+    padding-bottom:10px;
+}
+
+.panel p{
+
+    margin-bottom:12px;
+
+    color:#d5d5d5;
+}
+
+/* Center Area */
+
+.center{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+}
+
+/* Reactor */
+
+.reactor{
+
+    position:relative;
+
+    width:420px;
+    height:420px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+.ring{
+
+    position:absolute;
+
+    border-radius:50%;
+}
+
+/* Outer Ring */
+
+.outer{
+
+    width:420px;
+    height:420px;
+
+    border:3px solid var(--red);
+
+    animation:rotate 40s linear infinite;
+
+    box-shadow:
+            0 0 20px rgba(255,59,31,.5);
+}
+
+/* Middle Ring */
+
+.middle{
+
+    width:320px;
+    height:320px;
+
+    border:2px dashed var(--gold);
+
+    animation:rotateReverse 25s linear infinite;
+}
+
+/* Inner Ring */
+
+.inner{
+
+    width:240px;
+    height:240px;
+
+    border:2px solid rgba(255,180,0,.4);
+
+    animation:rotate 8s linear infinite;
+}
+
+/* Energy Ring */
+
+.energy{
+
+    width:180px;
+    height:180px;
+
+    border:2px solid var(--orange);
+
+    animation:pulseEnergy 2s infinite;
+}
+
+/* Core */
+
+.core{
+
+    width:150px;
+    height:150px;
+
+    border-radius:50%;
+
+    border:2px solid var(--gold);
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(255,59,31,.35),
+                    rgba(255,180,0,.05)
+            );
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:10;
+
+    box-shadow:
+            0 0 25px var(--red),
+            0 0 60px rgba(255,59,31,.4);
+}
+
+.core-title{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    color:var(--gold);
+}
+
+.core-status{
+
+    margin-top:8px;
+
+    font-size:11px;
+
+    color:#ddd;
+}
+
+/* Voice Visualizer */
+
+/*.voice-wave{*/
+
+/*    position:absolute;*/
+
+/*    bottom:25px;*/
+
+/*    display:flex;*/
+
+/*    gap:6px;*/
+/*}*/
+
+/*.voice-wave span{*/
+
+/*    width:8px;*/
+
+/*    height:25px;*/
+
+/*    border-radius:20px;*/
+
+/*    background:var(--gold);*/
+
+/*    animation:wave 1s infinite;*/
+/*}*/
+
+/*.voice-wave span:nth-child(2){animation-delay:.2s;}*/
+/*.voice-wave span:nth-child(3){animation-delay:.4s;}*/
+/*.voice-wave span:nth-child(4){animation-delay:.6s;}*/
+/*.voice-wave span:nth-child(5){animation-delay:.8s;}*/
+/*.voice-wave span:nth-child(6){animation-delay:1s;}*/
+
+/* Button */
+
+#listenBtn{
+
+    margin-top:15px;
+
+    padding:14px 45px;
+
+    border:none;
+
+    cursor:pointer;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-weight:bold;
+
+    color:black;
+
+    background:
+            linear-gradient(
+                    45deg,
+                    var(--red),
+                    var(--gold)
+            );
+
+    box-shadow:
+            0 0 20px rgba(255,180,0,.4);
+}
+
+/* Clock */
+
+#clock{
+
+    font-size:30px;
+
+    text-align:center;
+
+    color:var(--gold);
+
+    margin-bottom:25px;
+}
+
+/* Radar */
+
+.radar{
+
+    width:180px;
+    height:180px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    border:2px solid rgba(255,180,0,.3);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.sweep{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    width:50%;
+
+    height:2px;
+
+    background:var(--red);
+
+    transform-origin:left center;
+
+    animation:rotate 3s linear infinite;
+}
+
+/* Console */
+
+.console{
+
+    margin:0 20px 20px;
+
+    padding:20px;
+
+    overflow-y:auto;
+
+    border:
+            1px solid rgba(255,180,0,.15);
+
+    background:
+            rgba(255,255,255,.03);
+}
+
+.console h3{
+
+    color:var(--gold);
+
+    margin-bottom:15px;
+}
+
+#response{
+
+    margin-bottom:15px;
+}
+
+#history{
+
+    color:#cccccc;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+/* Animations */
+
+@keyframes rotate{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+@keyframes rotateReverse{
+    from{transform:rotate(360deg);}
+    to{transform:rotate(0deg);}
+}
+
+@keyframes pulseEnergy{
+    50%{
+        transform:scale(1.08);
+        opacity:.6;
+    }
+}
+
+@keyframes wave{
+    50%{
+        height:60px;
+    }
+}
+
+@keyframes pulseDot{
+    50%{
+        opacity:.5;
+    }
+}
+
+/* LISTENING */
+
+.core.listening{
+
+    border-color:#ff3b1f;
+
+    box-shadow:
+            0 0 30px #ff3b1f,
+            0 0 80px #ff3b1f;
+}
+
+/* THINKING */
+
+.core.processing{
+
+    border-color:#ffb400;
+
+    box-shadow:
+            0 0 30px #ffb400,
+            0 0 80px #ffb400;
+}
+
+/* SPEAKING */
+
+.core.speaking{
+
+    border-color:#00ff88;
+
+    box-shadow:
+            0 0 30px #00ff88,
+            0 0 80px #00ff88;
+}
+.blip{
+
+    position:absolute;
+
+    width:6px;
+
+    height:6px;
+
+    border-radius:50%;
+
+    background:#ff3b1f;
+
+    box-shadow:
+            0 0 10px #ff3b1f;
+
+    animation:
+            blipPulse
+            2s;
+}
+
+@keyframes blipPulse{
+
+    50%{
+
+        transform:scale(2);
+
+        opacity:.5;
+    }
+
+    100%{
+
+        opacity:0;
+    }
+}
+
+/* ==========================
+   BUTTON FIX
+========================== */
+
+.reactor,
+.ring,
+.outer,
+.middle,
+.inner,
+.energy,
+.voice-wave {
+
+    pointer-events: none;
+}
+
+#listenBtn {
+
+    position: relative;
+
+    z-index: 9999;
+
+    cursor: pointer;
+
+    margin-top: 25px;
+
+    padding: 18px 50px;
+
+    border: 2px solid #ffb400;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    letter-spacing: 2px;
+
+    transition: all .25s ease;
+
+    box-shadow:
+            0 0 20px rgba(255,180,0,.5),
+            0 0 40px rgba(255,59,31,.3);
+}
+
+#listenBtn:hover {
+
+    transform: scale(1.08);
+
+    letter-spacing: 4px;
+
+    box-shadow:
+            0 0 30px rgba(255,180,0,.8),
+            0 0 60px rgba(255,59,31,.6);
+}
+
+#listenBtn:active {
+
+    transform: scale(.95);
+
+    box-shadow:
+            0 0 10px rgba(255,180,0,.5);
+}
+
+#neuralCanvas{
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: -2;
+
+    opacity: .95;
+}
