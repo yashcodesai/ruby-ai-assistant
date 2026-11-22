@@ -20,7 +20,24 @@
 
   <div class="boot-container">
 
-    <h1>Ý̴̥͙̘̇̈́̇̃͒̿́͘͘͝͝ͅĄ̵̺̰̻̻͔͇͓̈́̓͛̏̈́͌͋̄̑͆̏Ś̸͙̺̥̰̯͙̭͆̏͂Ḩ̵̛̘̤͙͔̝̫̖̻̦̞͙̺̅̿͘͝ I̸̺̺͎̰̥̜̯̼̮̰͖̜͂͆̿̈́̿̔N̸̡̧͕͙̼̻̳̦̪̞̯͎̦͓̏̒͌͑͒͊̾͌̑̅̕͝ͅḐ̷̮̳̣̟͉͋͗̓̕͜U̴̡̢̱̳̳͓̗͔̮̔͜͜͜Ś̸͙̺̥̰̯͙̭͆̏͂T̷̡̧̬̲̭̦̘̩̊̉͛̓̓̌͌̕Ŗ̷͇̙̰̭̪̟̺̲̜̹͔̎̍́ͅI̸̺̺͎̰̥̜̯̼̮̰͖̜͂͆̿̈́̿̔Ȩ̸̪̯̗̘̥̣̲̣̣͍͚͙̥̩́̀̈̆͑Ś̸͙̺̥̰̯͙̭͆̏͂ </h1>
+    <!-- Logo lockup: emblem + wordmark -->
+    <h1 class="boot-logo" aria-label="Yash Industries">
+
+      <svg class="boot-emblem" viewBox="0 0 120 120" aria-hidden="true">
+        <polygon class="emblem-outer" points="60,6 106.8,33 106.8,87 60,114 13.2,87 13.2,33"/>
+        <polygon class="emblem-inner" points="60,22 93,41 93,79 60,98 27,79 27,41"/>
+        <path class="emblem-mark" d="M40 38 L60 62 L80 38 M60 62 L60 86"/>
+        <circle class="emblem-dot" cx="60" cy="62" r="3.5"/>
+      </svg>
+
+      <span class="boot-wordmark" aria-hidden="true">
+        <span class="wordmark-main">YASH</span>
+        <span class="wordmark-sub">INDUSTRIES</span>
+      </span>
+
+    </h1>
+
+    <div class="boot-tagline">RUBY&nbsp;AI &nbsp;·&nbsp; PERSONAL ASSISTANT SYSTEM</div>
 
     <div id="bootText"></div>
 
@@ -28,6 +45,11 @@
 
       <div id="progressBar"></div>
 
+    </div>
+
+    <div class="boot-progress-label">
+      <span>SYSTEM INITIALIZATION</span>
+      <span id="bootPercent">0%</span>
     </div>
 
   </div>
@@ -42,8 +64,20 @@
 
   <header class="topbar">
 
-    <div class="brand" aria-label="Yash Industries">
-      𝒀𝑨𝑺𝑯 𝑰𝑵𝑫𝑼𝑺𝑻𝑹𝑰𝑬𝑺
+    <div class="brand" role="img" aria-label="Yash Industries">
+
+      <svg class="brand-emblem" viewBox="0 0 120 120" aria-hidden="true">
+        <polygon class="e-outer" points="60,6 106.8,33 106.8,87 60,114 13.2,87 13.2,33"/>
+        <polygon class="e-inner" points="60,22 93,41 93,79 60,98 27,79 27,41"/>
+        <path class="e-mark" d="M40 38 L60 62 L80 38 M60 62 L60 86"/>
+        <circle class="e-dot" cx="60" cy="62" r="4"/>
+      </svg>
+
+      <span class="brand-wordmark" aria-hidden="true">
+        <span class="brand-main">YASH</span>
+        <span class="brand-sub">INDUSTRIES</span>
+      </span>
+
     </div>
 
     <button id="soundBtn" type="button" aria-pressed="true" title="Interface sounds">SOUND ON</button>

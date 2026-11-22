@@ -21,46 +21,285 @@
 
 .boot-container{
 
-    width:min(700px, 90vw);
+    width:min(620px, 88vw);
 
     text-align:center;
 }
 
-.boot-container h1{
+/* ---------- Logo lockup ---------- */
 
-    color:#ffb400;
+.boot-logo{
 
-    font-size:48px;
+    display:flex;
 
-    margin-bottom:40px;
+    align-items:center;
 
-    text-shadow:
-            0 0 20px #ffb400;
+    justify-content:center;
+
+    gap:26px;
+
+    margin:0 0 22px;
+
+    font-weight:normal;
 }
+
+.boot-emblem{
+
+    width:96px;
+
+    height:96px;
+
+    flex-shrink:0;
+
+    overflow:visible;
+
+    filter:drop-shadow(0 0 10px rgba(255,180,0,.45));
+
+    animation:emblemGlow 3s ease-in-out 1.6s infinite;
+}
+
+.boot-emblem polygon,
+.boot-emblem path{
+
+    fill:none;
+
+    stroke-linecap:round;
+
+    stroke-linejoin:round;
+}
+
+/* each stroke "draws itself" in turn */
+.emblem-outer{
+
+    stroke:#ffb400;
+
+    stroke-width:3;
+
+    stroke-dasharray:330;
+
+    stroke-dashoffset:330;
+
+    animation:drawStroke 1.1s ease-out .1s forwards;
+}
+
+.emblem-inner{
+
+    stroke:rgba(255,59,31,.8);
+
+    stroke-width:1.5;
+
+    stroke-dasharray:235;
+
+    stroke-dashoffset:235;
+
+    animation:drawStroke 1s ease-out .5s forwards;
+}
+
+.emblem-mark{
+
+    stroke:#ffffff;
+
+    stroke-width:6;
+
+    stroke-dasharray:90;
+
+    stroke-dashoffset:90;
+
+    animation:drawStroke .8s ease-out .9s forwards;
+}
+
+.emblem-dot{
+
+    fill:#ff3b1f;
+
+    opacity:0;
+
+    animation:fadeIn .4s ease-out 1.5s forwards;
+}
+
+.boot-wordmark{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    line-height:1;
+}
+
+.wordmark-main{
+
+    font-size:58px;
+
+    font-weight:900;
+
+    letter-spacing:.32em;
+
+    /* letter-spacing adds space after the last letter too; balance it */
+    margin-right:-.32em;
+
+    color:transparent;
+
+    background:linear-gradient(
+            100deg,
+            #ffb400 0%,
+            #ffb400 42%,
+            #fff3c4 50%,
+            #ffb400 58%,
+            #ff8a00 100%);
+
+    background-size:250% 100%;
+
+    background-position:100% 0;
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    filter:drop-shadow(0 0 14px rgba(255,180,0,.35));
+
+    opacity:0;
+
+    animation:
+            wordIn .9s cubic-bezier(.2,.7,.2,1) .7s forwards,
+            lightSweep 3.2s ease-in-out 1.8s infinite;
+}
+
+.wordmark-sub{
+
+    margin-top:10px;
+
+    font-size:15px;
+
+    font-weight:400;
+
+    letter-spacing:.78em;
+
+    color:rgba(255,255,255,.75);
+
+    opacity:0;
+
+    animation:wordIn .9s cubic-bezier(.2,.7,.2,1) 1s forwards;
+}
+
+.boot-tagline{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:34px;
+
+    color:rgba(255,180,0,.7);
+
+    font-size:10px;
+
+    letter-spacing:.35em;
+
+    white-space:nowrap;
+
+    opacity:0;
+
+    animation:fadeIn .8s ease-out 1.4s forwards;
+}
+
+.boot-tagline::before,
+.boot-tagline::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:linear-gradient(90deg, transparent, rgba(255,180,0,.5));
+}
+
+.boot-tagline::after{
+
+    background:linear-gradient(90deg, rgba(255,180,0,.5), transparent);
+}
+
+/* ---------- System check list ---------- */
 
 #bootText{
 
-    min-height:180px;
+    min-height:150px;
 
     text-align:left;
 
-    color:#ff3b1f;
+    font-size:11px;
 
-    font-size:18px;
+    letter-spacing:.15em;
 
-    line-height:2;
+    line-height:1;
 }
+
+.boot-line{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:6px 0;
+
+    color:rgba(255,255,255,.7);
+
+    border-bottom:1px solid rgba(255,180,0,.08);
+
+    animation:lineIn .35s ease-out;
+}
+
+.boot-line::before{
+
+    content:"▸";
+
+    color:#ff3b1f;
+}
+
+.boot-line::after{
+
+    content:"OK";
+
+    margin-left:auto;
+
+    color:#00e08a;
+
+    letter-spacing:.2em;
+}
+
+.boot-line.boot-welcome{
+
+    color:#ffb400;
+
+    border-bottom:none;
+
+    padding-top:12px;
+
+    font-size:13px;
+}
+
+.boot-line.boot-welcome::after{
+
+    content:"";
+}
+
+/* ---------- Progress ---------- */
 
 .progress-wrapper{
 
     width:100%;
 
-    height:12px;
+    height:2px;
 
-    margin-top:30px;
+    margin-top:22px;
 
-    border:
-            1px solid #ffb400;
+    background:rgba(255,180,0,.12);
 }
 
 #progressBar{
@@ -69,14 +308,63 @@
 
     height:100%;
 
-    background:
-            linear-gradient(
-                    90deg,
-                    #ff3b1f,
-                    #ffb400
-            );
+    background:linear-gradient(90deg, #ff3b1f, #ffb400);
 
-    transition:.3s;
+    box-shadow:0 0 10px #ffb400, 0 0 20px rgba(255,59,31,.6);
+
+    transition:width .5s ease;
+}
+
+.boot-progress-label{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:10px;
+
+    color:rgba(255,255,255,.4);
+
+    font-size:9px;
+
+    letter-spacing:.3em;
+}
+
+#bootPercent{
+
+    color:#ffb400;
+
+    font-variant-numeric:tabular-nums;
+}
+
+/* ---------- Splash animations ---------- */
+
+@keyframes drawStroke{
+    to{ stroke-dashoffset:0; }
+}
+
+@keyframes fadeIn{
+    to{ opacity:1; }
+}
+
+@keyframes wordIn{
+    from{ opacity:0; transform:translateX(-14px); letter-spacing:.6em; }
+    to  { opacity:1; transform:none; }
+}
+
+@keyframes lightSweep{
+    0%  { background-position:100% 0; }
+    60% { background-position:0% 0; }
+    100%{ background-position:0% 0; }
+}
+
+@keyframes emblemGlow{
+    50%{ filter:drop-shadow(0 0 22px rgba(255,180,0,.8)); }
+}
+
+@keyframes lineIn{
+    from{ opacity:0; transform:translateY(4px); }
+    to  { opacity:1; transform:none; }
 }
 
 /* MAIN UI */
@@ -156,24 +444,105 @@ body::before{
 
 .brand{
 
-    color:var(--gold);
+    /* same lockup as the splash screen: emblem + stacked wordmark */
+    display:flex;
 
-    font-size:32px;
+    align-items:center;
+
+    gap:12px;
+
+    min-width:0;
+
+    padding:6px 0;
+}
+
+.brand-emblem{
+
+    width:38px;
+
+    height:38px;
+
+    flex-shrink:0;
+
+    filter:drop-shadow(0 0 6px rgba(255,180,0,.45));
+}
+
+.brand-emblem polygon,
+.brand-emblem path{
+
+    fill:none;
+
+    stroke-linecap:round;
+
+    stroke-linejoin:round;
+}
+
+/* strokes are thicker than on the splash so they stay crisp when small */
+.brand-emblem .e-outer{
+
+    stroke:#ffb400;
+
+    stroke-width:6;
+}
+
+.brand-emblem .e-inner{
+
+    stroke:rgba(255,59,31,.85);
+
+    stroke-width:3.5;
+}
+
+.brand-emblem .e-mark{
+
+    stroke:#ffffff;
+
+    stroke-width:10;
+}
+
+.brand-emblem .e-dot{
+
+    fill:#ff3b1f;
+}
+
+.brand-wordmark{
+
+    display:flex;
+
+    flex-direction:column;
+
+    line-height:1;
+
+    white-space:nowrap;
+}
+
+.brand-main{
+
+    font-size:22px;
 
     font-weight:900;
 
-    letter-spacing:4px;
+    letter-spacing:.32em;
 
-    text-shadow:0 0 10px var(--gold);
+    color:transparent;
 
-    /* never push the online status off small screens */
-    min-width:0;
+    background:linear-gradient(100deg, #ffb400 0%, #ffd36b 50%, #ff8a00 100%);
 
-    overflow:hidden;
+    -webkit-background-clip:text;
 
-    white-space:nowrap;
+    background-clip:text;
 
-    text-overflow:ellipsis;
+    filter:drop-shadow(0 0 8px rgba(255,180,0,.35));
+}
+
+.brand-sub{
+
+    margin-top:5px;
+
+    font-size:8px;
+
+    letter-spacing:.6em;
+
+    color:rgba(255,255,255,.75);
 }
 
 .status{
@@ -896,16 +1265,66 @@ body::before{
         gap: 10px;
     }
 
-    .brand {
+    /* splash: stack emblem above the wordmark */
+    .boot-logo {
 
-        font-size: 15px;
+        flex-direction: column;
 
-        letter-spacing: 2px;
+        gap: 16px;
     }
 
-    .boot-container h1 {
+    .boot-wordmark {
 
-        font-size: 32px;
+        align-items: center;
+    }
+
+    .wordmark-main {
+
+        font-size: 40px;
+    }
+
+    .wordmark-sub {
+
+        font-size: 11px;
+
+        letter-spacing: .6em;
+
+        margin-right: -.6em;
+    }
+
+    .boot-tagline {
+
+        font-size: 8px;
+
+        letter-spacing: .2em;
+    }
+
+    .brand {
+
+        gap: 8px;
+    }
+
+    .brand-emblem {
+
+        width: 28px;
+
+        height: 28px;
+    }
+
+    .brand-main {
+
+        font-size: 16px;
+
+        letter-spacing: .28em;
+    }
+
+    .brand-sub {
+
+        margin-top: 4px;
+
+        font-size: 6.5px;
+
+        letter-spacing: .5em;
     }
 
     .status {

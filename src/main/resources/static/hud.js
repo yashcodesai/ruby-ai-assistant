@@ -65,13 +65,15 @@ function startBootSequence(){
     const interval = setInterval(() => {
 
         const line = document.createElement("div");
-        line.textContent = messages[index];
+        const isWelcome = index === messages.length - 1;
+        line.className = isWelcome ? "boot-line boot-welcome" : "boot-line";
+        line.textContent = messages[index].replace(/\.\.\.$/, "");
         bootText.appendChild(line);
 
-        progressBar.style.width =
-            ((index + 1) /
-                messages.length)
-            * 100 + "%";
+        const percent = Math.round(((index + 1) / messages.length) * 100);
+        progressBar.style.width = percent + "%";
+        const percentLabel = document.getElementById("bootPercent");
+        if (percentLabel) percentLabel.textContent = percent + "%";
 
         index++;
 
