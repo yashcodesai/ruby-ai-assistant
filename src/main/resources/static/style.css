@@ -21,7 +21,7 @@
 
 .boot-container{
 
-    width:700px;
+    width:min(700px, 90vw);
 
     text-align:center;
 }
@@ -104,11 +104,10 @@ body{
     background:var(--bg);
     color:white;
     font-family:'Orbitron',sans-serif;
-    height:100vh;
-    overflow:hidden;
 
-    display:grid;
-    grid-template-rows:80px 1fr 180px;
+    /* min-height + vertical scroll, so nothing is cut off on short screens */
+    min-height:100vh;
+    overflow-x:hidden;
 }
 
 /* Neural Background */
@@ -166,6 +165,15 @@ body::before{
     letter-spacing:4px;
 
     text-shadow:0 0 10px var(--gold);
+
+    /* never push the online status off small screens */
+    min-width:0;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
 }
 
 .status{
@@ -702,4 +710,242 @@ body::before{
     z-index: -2;
 
     opacity: .95;
+}
+/* Typed command input (fallback when voice is unavailable) */
+
+#commandForm {
+
+    position: relative;
+
+    z-index: 9999;
+
+    display: flex;
+
+    gap: 8px;
+
+    width: 100%;
+
+    max-width: 420px;
+
+    margin-top: 10px;
+}
+
+#commandInput {
+
+    flex: 1;
+
+    /* inputs default to ~20 characters wide; without this the SEND
+       button gets pushed off small screens */
+    min-width: 0;
+
+    padding: 10px 14px;
+
+    border: 1px solid var(--gold);
+
+    border-radius: 6px;
+
+    background: rgba(0, 0, 0, .6);
+
+    color: #fff;
+
+    font-family: 'Orbitron', sans-serif;
+
+    font-size: 13px;
+
+    outline: none;
+}
+
+#commandInput:focus {
+
+    box-shadow: 0 0 12px rgba(255, 180, 0, .6);
+}
+
+#commandForm button {
+
+    padding: 10px 18px;
+
+    border: 1px solid var(--gold);
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-family: 'Orbitron', sans-serif;
+
+    font-weight: bold;
+
+    color: black;
+
+    background: linear-gradient(45deg, var(--red), var(--gold));
+}
+
+#listenBtn:disabled {
+
+    cursor: not-allowed;
+
+    opacity: .5;
+
+    transform: none;
+}
+
+#response a {
+
+    color: var(--gold);
+}
+
+/* Voice picker */
+
+.voice-picker {
+
+    position: relative;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    max-width: 420px;
+
+    margin-top: 10px;
+
+    color: var(--gold);
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+#voiceSelect {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 6px 10px;
+
+    border: 1px solid rgba(255, 180, 0, .5);
+
+    border-radius: 6px;
+
+    background: rgba(0, 0, 0, .6);
+
+    color: #fff;
+
+    font-family: 'Orbitron', sans-serif;
+
+    font-size: 11px;
+}
+
+/* Server offline indicator */
+
+.dot.offline {
+
+    background: #555;
+
+    box-shadow: none;
+
+    animation: none;
+}
+
+/* ==========================
+   RESPONSIVE LAYOUT
+========================== */
+
+/* Tablets and small laptops: core on top, panels side by side below */
+
+@media (max-width: 1100px) {
+
+    .layout {
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Grid items default to min-width:auto and would stretch to fit
+       wide content; let them shrink to the screen instead. */
+    .layout > * {
+
+        min-width: 0;
+    }
+
+    .layout .center {
+
+        grid-column: 1 / -1;
+
+        order: -1;
+    }
+}
+
+/* Phones: single column, smaller reactor */
+
+@media (max-width: 640px) {
+
+    .topbar {
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+    }
+
+    .topbar {
+
+        gap: 10px;
+    }
+
+    .brand {
+
+        font-size: 15px;
+    }
+
+    .boot-container h1 {
+
+        font-size: 32px;
+    }
+
+    .status {
+
+        font-size: 11px;
+
+        white-space: nowrap;
+    }
+
+    .layout {
+
+        grid-template-columns: 1fr;
+
+        gap: 15px;
+
+        padding: 15px;
+    }
+
+    /* The rings use fixed pixel sizes, so scale the whole reactor.
+       Negative margins remove the empty space scaling leaves behind. */
+    .reactor {
+
+        transform: scale(.7);
+
+        /* 420px * (1 - .7) / 2 = 63px: give back the space on every side */
+        margin: -63px;
+    }
+
+    #listenBtn {
+
+        padding: 14px 36px;
+    }
+
+    .console {
+
+        margin: 0 15px 15px;
+    }
+}
+
+/* Keep the online status fully visible next to a long brand name */
+
+.status {
+
+    flex-shrink: 0;
 }

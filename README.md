@@ -257,6 +257,8 @@ src
 
 # Running Locally
 
+Requires Java 17 or newer.
+
 Clone the repository:
 
 ```bash
@@ -284,8 +286,28 @@ mvn spring-boot:run
 Open:
 
 ```text
-http://localhost:8085
+http://localhost:8080
 ```
+
+Voice input works in Chrome and Edge. In other browsers, type commands into the text box.
+
+Run the tests:
+
+```bash
+./mvnw test
+```
+
+When the dashboard loads, RUBY asks for your name and uses it for the rest of the session. Say "call me ..." to change it.
+
+## Getting a natural voice
+
+RUBY uses the most natural female voice your browser offers, and you can pick another from the **VOICE** menu (★ marks natural-sounding voices):
+
+- **Microsoft Edge:** has free neural voices such as Aria, Jenny, Sonia and Neerja that sound close to Alexa.
+- **Mac (Safari/Chrome):** open System Settings → Accessibility → Spoken Content → System Voice → Manage Voices, and download an English voice marked **Premium** (for example Ava or Zoe).
+- **Chrome:** "Google UK English Female" is used automatically.
+
+To credit yourself in answers to "who created you", set `ruby.creator-name` in `src/main/resources/application.properties`.
 
 ---
 

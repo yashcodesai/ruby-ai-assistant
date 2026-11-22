@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RUBY AI - SAXENA INDUSTRIES</title>
+<title>RUBY AI - YASH INDUSTRIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -37,7 +37,7 @@
 
   <header class="topbar">
 
-    <div class="brand">
+    <div class="brand" aria-label="Yash Industries">
       𝒀𝑨𝑺𝑯 𝑰𝑵𝑫𝑼𝑺𝑻𝑹𝑰𝑬𝑺
     </div>
 
@@ -45,7 +45,7 @@
 
       <span class="dot"></span>
 
-      RUBY ONLINE
+      <span id="serverStatus">CONNECTING...</span>
 
     </div>
 
@@ -174,11 +174,32 @@
 
       </div>
 
-      <button id="listenBtn">
+      <button id="listenBtn" type="button">
 
         ACTIVATE
 
       </button>
+
+      <form id="commandForm" autocomplete="off">
+
+        <input
+                id="commandInput"
+                type="text"
+                maxlength="500"
+                placeholder="Or type a command..."
+                aria-label="Type a command">
+
+        <button type="submit">SEND</button>
+
+      </form>
+
+      <label class="voice-picker">
+
+        VOICE
+
+        <select id="voiceSelect" aria-label="RUBY's voice"></select>
+
+      </label>
 
     </main>
 
@@ -249,6 +270,8 @@
 </audio>
 
 <script src="hud.js"></script>
+
+<script src="voice.js"></script>
 
 <script src="app.js"></script>
 

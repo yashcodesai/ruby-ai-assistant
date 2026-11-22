@@ -1,39 +1,14 @@
 package com.ruby.ruby.dto;
 
-public class ChatResponse {
+/**
+ * @param response      text RUBY says back
+ * @param url           website the browser should open, or null
+ * @param stopListening true if the browser should switch voice mode off
+ * @param userName      the user's name for this session, or null if not known yet
+ */
+public record ChatResponse(String response, String url, boolean stopListening, String userName) {
 
-    private String response;
-
-    private String action;
-
-    public ChatResponse() {
-    }
-
-    public ChatResponse(String response) {
-        this.response = response;
-    }
-
-    public ChatResponse(
-            String response,
-            String action
-    ) {
-        this.response = response;
-        this.action = action;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
+    public static ChatResponse error(String response) {
+        return new ChatResponse(response, null, false, null);
     }
 }
