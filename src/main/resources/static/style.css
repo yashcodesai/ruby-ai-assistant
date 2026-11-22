@@ -2411,12 +2411,18 @@ body::after {
 
     flex: 1 1 auto;
 
-    /* at least this tall; grows into any extra space on large screens */
-    min-height: 230px;
+    /* compact: never taller than 200px, centred in any spare space */
+    min-height: 150px;
+
+    max-height: 200px;
+
+    width: 100%;
+
+    max-width: 230px;
+
+    margin: auto;
 
     contain: size;
-
-    margin: 4px 0 8px;
 }
 
 #hologramCanvas {
@@ -2437,6 +2443,6 @@ body::after {
 
         flex: none;
 
-        height: 300px;
+        height: 200px;
     }
 }
