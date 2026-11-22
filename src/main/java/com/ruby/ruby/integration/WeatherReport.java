@@ -3,18 +3,22 @@ package com.ruby.ruby.integration;
 /**
  * Current weather for a place.
  *
- * @param city        e.g. "New Delhi"
- * @param country     e.g. "India"
- * @param latitude    degrees north (negative = south)
- * @param longitude   degrees east (negative = west)
- * @param temperature degrees Celsius
- * @param feelsLike   degrees Celsius
- * @param humidity    percent
- * @param windKmh     km/h
- * @param code        WMO weather code
- * @param day         true in daytime
+ * @param city              e.g. "Manali"
+ * @param region            state/province, e.g. "Tamil Nadu"; may be empty
+ * @param country           e.g. "India"
+ * @param alternativeRegion if another well-known place has the same name, its
+ *                          region (e.g. "Himachal Pradesh"), otherwise null
+ * @param latitude          degrees north (negative = south)
+ * @param longitude         degrees east (negative = west)
+ * @param temperature       degrees Celsius
+ * @param feelsLike         degrees Celsius
+ * @param humidity          percent
+ * @param windKmh           km/h
+ * @param code              WMO weather code
+ * @param day               true in daytime
  */
-public record WeatherReport(String city, String country, double latitude, double longitude,
+public record WeatherReport(String city, String region, String country, String alternativeRegion,
+                            double latitude, double longitude,
                             double temperature, double feelsLike,
                             int humidity, double windKmh, int code, boolean day) {
 
@@ -42,5 +46,10 @@ public record WeatherReport(String city, String country, double latitude, double
             case 96, 99 -> "Thunderstorm with hail";
             default -> "Unknown conditions";
         };
+    }
+
+    /** True when the name alone could mean another place, so the region is worth saying. */
+    public boolean ambiguous() {
+        return alternativeRegion != null;
     }
 }

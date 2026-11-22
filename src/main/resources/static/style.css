@@ -2377,3 +2377,66 @@ body::after {
         transform: perspective(1400px) rotateX(calc(3deg + var(--ty, 0) * -2deg));
     }
 }
+
+/* =====================================================
+   AVATAR HOLOGRAM (bottom of the left panel)
+   The panel becomes a column; the hologram takes whatever height is
+   left, but never less than its minimum. "contain: size" stops the
+   canvas's own pixel size from affecting the layout.
+   ===================================================== */
+
+.layout > .panel:first-child {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.hologram-section {
+
+    flex: 1 1 auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: 0;
+
+    margin-bottom: 0;
+}
+
+.hologram-wrap {
+
+    position: relative;
+
+    flex: 1 1 auto;
+
+    /* at least this tall; grows into any extra space on large screens */
+    min-height: 230px;
+
+    contain: size;
+
+    margin: 4px 0 8px;
+}
+
+#hologramCanvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+}
+
+/* Stacked layout (tablets/phones): give the hologram a fixed height */
+@media (max-width: 1100px) {
+
+    .hologram-wrap {
+
+        flex: none;
+
+        height: 300px;
+    }
+}

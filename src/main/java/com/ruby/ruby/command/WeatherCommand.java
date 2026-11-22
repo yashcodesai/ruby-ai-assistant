@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class WeatherCommand implements Command {
 
     private static final Pattern PLACE = Pattern.compile(
-            "\\b(?:in|at|for|of)\\s+([a-z][a-z .'-]*?)"
+            "\\b(?:in|at|for|of)\\s+([a-z][a-z .,'-]*?)"
                     + "(?:\\s+(?:today|now|right now|currently|tonight|please))?\\s*[?.!]*$");
 
     private final WeatherService weather;
@@ -74,13 +74,21 @@ public class WeatherCommand implements Command {
     private static Reply describe(WeatherReport report) {
         long temperature = Math.round(report.temperature());
         long feelsLike = Math.round(report.feelsLike());
-        String spoken = "In " + report.city() + " it is " + temperature + " degrees, "
+        // Name the region when the city name alone is ambiguous (Manali, Tamil Nadu vs Himachal Pradesh).
+        String place = report.ambiguous() && !report.region().isEmpty()
+                ? report.city() + ", " + report.region()
+                : report.city();
+        String spoken = "In " + place + " it is " + temperature + " degrees, "
                 + report.description().toLowerCase() + "."
                 + (feelsLike != temperature ? " It feels like " + feelsLike + " degrees." : "")
-                + " Humidity is " + report.humidity() + " percent.";
+                + " Humidity is " + report.humidity() + " percent."
+                + (report.ambiguous()
+                ? " If you meant " + report.city() + " in " + report.alternativeRegion()
+                + ", say: weather in " + report.city() + " " + report.alternativeRegion() + "."
+                : "");
 
         Card card = new Card("weather",
-                report.country().isEmpty() ? report.city() : report.city() + ", " + report.country(),
+                report.country().isEmpty() ? place : place + ", " + report.country(),
                 report.description(),
                 null, null, null,
                 List.of(new Card.Fact("Temperature", temperature + "°C"),

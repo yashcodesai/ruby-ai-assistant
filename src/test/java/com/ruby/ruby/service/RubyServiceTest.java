@@ -44,14 +44,18 @@ class RubyServiceTest {
     static final Clock CLOCK = Clock.fixed(Instant.parse("2026-11-22T08:05:00Z"), ZoneOffset.UTC);
 
     /** Fake online services: tests never touch the network. */
-    static final WeatherReport DELHI = new WeatherReport("New Delhi", "India", 28.62, 77.21, 24.2, 24.6, 47, 2.1, 0, true);
+    static final WeatherReport DELHI = new WeatherReport("New Delhi", "Delhi", "India", null, 28.62, 77.21, 24.2, 24.6, 47, 2.1, 0, true);
     static boolean offline = false;
 
     static Optional<WeatherReport> fakeWeather(String place) {
         if (offline) throw new ServiceUnavailableException("offline", null);
         return place.equalsIgnoreCase("new delhi") ? Optional.of(DELHI)
                 : place.equalsIgnoreCase("mumbai")
-                ? Optional.of(new WeatherReport("Mumbai", "India", 19.08, 72.88, 31.6, 34.0, 60, 9.0, 2, true))
+                ? Optional.of(new WeatherReport("Mumbai", "Maharashtra", "India", null,
+                19.08, 72.88, 31.6, 34.0, 60, 9.0, 2, true))
+                : place.equalsIgnoreCase("manali")
+                ? Optional.of(new WeatherReport("Manali", "Tamil Nadu", "India", "Himachal Pradesh",
+                13.17, 80.27, 27.0, 29.0, 70, 5.0, 1, true))
                 : Optional.empty();
     }
 
@@ -277,6 +281,16 @@ class RubyServiceTest {
     }
 
     @Test
+    void ambiguousPlaceNamesTheRegionAndTheAlternative() {
+        Reply reply = service.process("weather in Manali", memory);
+        assertEquals("In Manali, Tamil Nadu it is 27 degrees, mainly clear. It feels like 29 degrees. "
+                + "Humidity is 70 percent. If you meant Manali in Himachal Pradesh, say: "
+                + "weather in Manali Himachal Pradesh.", reply.text());
+        assertEquals("Manali, Tamil Nadu, India", reply.card().title());
+        assertEquals("Manali", reply.card().location().label());
+    }
+
+    @Test
     void weatherErrors() {
         assertEquals("I could not find a place called Atlantis City.", ask("weather in atlantis city"));
         offline = true;
@@ -360,6 +374,13 @@ class RubyServiceTest {
     }
 
     @Test
+    void stopWithOtherWordsIsNotVoiceStop() {
+        Reply reply = service.process("stop the timer", memory);
+        assertFalse(reply.stopListening());
+        assertTrue(reply.cancelTimers());
+    }
+
+    @Test
     void cancelsTimersAndExplainsAlarms() {
         assertTrue(service.process("cancel all timers", memory).cancelTimers());
         assertTrue(service.process("stop the reminder", memory).cancelTimers());
@@ -426,7 +447,8 @@ class RubyServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"stop", "Stop.", "stop listening", "Ruby stop", "goodbye", "bye Ruby", "never mind"})
+    @ValueSource(strings = {"stop", "Stop.", "stop listening", "Ruby stop", "goodbye", "bye Ruby", "never mind",
+            "stop stop", "stop it stop", "please stop listening now", "ok stop", "be quiet"})
     void stopsListening(String text) {
         assertTrue(service.process(text, memory).stopListening(), text);
     }

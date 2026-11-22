@@ -301,6 +301,7 @@ function animateLevel(now) {
 
     level += (target - level) * 0.25;
     reactor.style.setProperty("--level", level.toFixed(3));
+    RubyHologram.setActivity(level, state);
 }
 
 requestAnimationFrame(animateLevel);

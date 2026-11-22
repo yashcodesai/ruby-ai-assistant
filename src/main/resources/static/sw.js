@@ -3,11 +3,11 @@
 // version is picked up immediately; the cache is only a fallback.
 // API calls (/api/...) are never cached: answers must be live.
 
-const CACHE = "ruby-v3";
+const CACHE = "ruby-v4";
 
 const SHELL = [
     "/", "/index.html", "/style.css",
-    "/sfx.js", "/globe-data.js", "/globe.js", "/hud.js", "/voice.js", "/widgets.js", "/app.js",
+    "/sfx.js", "/globe-data.js", "/globe.js", "/hologram.js", "/hud.js", "/voice.js", "/widgets.js", "/app.js",
     "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"
 ];
 
