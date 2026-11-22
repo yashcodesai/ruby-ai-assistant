@@ -16,12 +16,12 @@ A 5–7 minute live demo that shows every major feature.
 
 | # | Do / say | What the audience sees |
 |---|---|---|
-| 1 | Reload the page | Boot sequence, then the HUD comes online |
-| 2 | Point out the panels | Real readouts: server latency, battery, network, CPU cores, live weather, clock |
+| 1 | Reload the page | Boot sequence with the Yash Industries logo, then the dashboard assembles itself |
+| 2 | Point out the panels and move the mouse | Real readouts (latency, battery, network, weather); panels tilt in 3D; the globe shows your city's coordinates |
 | 3 | Click **ACTIVATE** | Activation sound; RUBY greets you by time of day and asks your name |
 | 4 | "My name is …" | "Nice to meet you…"; your name appears under SESSION |
 | 5 | "What's the weather?" | Weather card with temperature, humidity and wind |
-| 6 | "Weather in Mumbai" | Works for any city |
+| 6 | "Weather in London" | The holographic globe turns to London and drops a beacon with its coordinates |
 | 7 | "Who is APJ Abdul Kalam?" | Spoken answer plus a photo card from Wikipedia |
 | 8 | "Set a timer for 30 seconds" | Countdown appears under ACTIVE TIMERS; keep talking, and RUBY chimes and speaks when it ends |
 | 9 | "Remember that the presentation went well" | Note saved; NOTES counter goes up |

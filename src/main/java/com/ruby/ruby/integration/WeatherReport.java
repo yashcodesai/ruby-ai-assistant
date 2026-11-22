@@ -5,6 +5,8 @@ package com.ruby.ruby.integration;
  *
  * @param city        e.g. "New Delhi"
  * @param country     e.g. "India"
+ * @param latitude    degrees north (negative = south)
+ * @param longitude   degrees east (negative = west)
  * @param temperature degrees Celsius
  * @param feelsLike   degrees Celsius
  * @param humidity    percent
@@ -12,7 +14,8 @@ package com.ruby.ruby.integration;
  * @param code        WMO weather code
  * @param day         true in daytime
  */
-public record WeatherReport(String city, String country, double temperature, double feelsLike,
+public record WeatherReport(String city, String country, double latitude, double longitude,
+                            double temperature, double feelsLike,
                             int humidity, double windKmh, int code, boolean day) {
 
     /** Plain-English description of the WMO weather code. */

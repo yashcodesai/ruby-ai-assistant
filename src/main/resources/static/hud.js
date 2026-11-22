@@ -95,6 +95,12 @@ function startBootSequence(){
                     mainUI.style.opacity =
                         "1";
 
+                    // Panels slide in one by one (see "Cinematic entrance" in style.css).
+                    mainUI.classList.add("assemble");
+                    // Remove it once played: readouts that are re-drawn later
+                    // (e.g. the timer list) must not replay the entrance.
+                    setTimeout(() => mainUI.classList.remove("assemble"), 3000);
+
                     // app.js starts the conversation (asks the user's name).
                     window.dispatchEvent(new Event("ruby:booted"));
 
@@ -505,6 +511,7 @@ async function updateWeather() {
         setReadout("temperature", Math.round(w.temperature) + "°C");
         setReadout("conditions", describeWeather(w.code, w.day).toUpperCase());
         setReadout("location", w.city.toUpperCase());
+        RubyGlobe.setHome(w.latitude, w.longitude, w.city);
     } catch (error) {
         setReadout("temperature", "--");
         setReadout("conditions", "UNAVAILABLE");
@@ -528,22 +535,40 @@ function describeWeather(code, day) {
 updateWeather();
 setInterval(updateWeather, 10 * 60 * 1000);
 
-// RADAR BLIPS
+// 3D PARALLAX TILT
+// Panels and the core lean slightly towards the mouse. Only on devices with a
+// mouse, and never when the user asked the system to reduce motion.
 
-const blips = document.getElementById("blips");
+const tiltAllowed =
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-setInterval(() => {
+if (tiltAllowed) {
+    const ui = document.getElementById("mainUI");
+    let targetX = 0;
+    let targetY = 0;
+    let x = 0;
+    let y = 0;
 
-    if (!blips || document.hidden) return;
+    window.addEventListener("mousemove", e => {
+        targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+        targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+    document.addEventListener("mouseleave", () => {
+        targetX = 0;
+        targetY = 0;
+    });
 
-    const blip = document.createElement("div");
-
-    blip.className = "blip";
-    blip.style.left = Math.random() * 170 + "px";
-    blip.style.top = Math.random() * 170 + "px";
-
-    blips.appendChild(blip);
-
-    setTimeout(() => blip.remove(), 2000);
-
-}, 1000);
+    (function tilt() {
+        requestAnimationFrame(tilt);
+        const nx = x + (targetX - x) * 0.08;
+        const ny = y + (targetY - y) * 0.08;
+        // Only touch the style when the change is visible.
+        if (Math.abs(nx - x) > 0.001 || Math.abs(ny - y) > 0.001) {
+            x = nx;
+            y = ny;
+            ui.style.setProperty("--tx", x.toFixed(3));
+            ui.style.setProperty("--ty", y.toFixed(3));
+        }
+    })();
+}

@@ -44,14 +44,14 @@ class RubyServiceTest {
     static final Clock CLOCK = Clock.fixed(Instant.parse("2026-11-22T08:05:00Z"), ZoneOffset.UTC);
 
     /** Fake online services: tests never touch the network. */
-    static final WeatherReport DELHI = new WeatherReport("New Delhi", "India", 24.2, 24.6, 47, 2.1, 0, true);
+    static final WeatherReport DELHI = new WeatherReport("New Delhi", "India", 28.62, 77.21, 24.2, 24.6, 47, 2.1, 0, true);
     static boolean offline = false;
 
     static Optional<WeatherReport> fakeWeather(String place) {
         if (offline) throw new ServiceUnavailableException("offline", null);
         return place.equalsIgnoreCase("new delhi") ? Optional.of(DELHI)
                 : place.equalsIgnoreCase("mumbai")
-                ? Optional.of(new WeatherReport("Mumbai", "India", 31.6, 34.0, 60, 9.0, 2, true))
+                ? Optional.of(new WeatherReport("Mumbai", "India", 19.08, 72.88, 31.6, 34.0, 60, 9.0, 2, true))
                 : Optional.empty();
     }
 
@@ -265,6 +265,8 @@ class RubyServiceTest {
         assertEquals("weather", reply.card().type());
         assertEquals("New Delhi, India", reply.card().title());
         assertEquals("24°C", reply.card().facts().get(0).value());
+        assertEquals(28.62, reply.card().location().latitude(), 1e-9, "globe marker position");
+        assertEquals("New Delhi", reply.card().location().label());
     }
 
     @ParameterizedTest

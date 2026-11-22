@@ -86,7 +86,8 @@ public class WeatherCommand implements Command {
                 List.of(new Card.Fact("Temperature", temperature + "°C"),
                         new Card.Fact("Feels like", feelsLike + "°C"),
                         new Card.Fact("Humidity", report.humidity() + "%"),
-                        new Card.Fact("Wind", Math.round(report.windKmh()) + " km/h")));
+                        new Card.Fact("Wind", Math.round(report.windKmh()) + " km/h")),
+                new Card.Location(report.latitude(), report.longitude(), report.city()));
         return Reply.withCard(spoken, card);
     }
 }

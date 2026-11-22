@@ -468,6 +468,10 @@ async function sendCommand(text) {
     typeRuby(reply.response);
 
     if (reply.card) RubyCards.show(reply.card);
+    if (reply.card && reply.card.location) {
+        const place = reply.card.location;
+        RubyGlobe.focus(place.latitude, place.longitude, place.label);
+    }
     if (reply.timer) RubyTimers.start(reply.timer);
     if (reply.cancelTimers) RubyTimers.cancelAll();
     if (reply.stopListening && active) {

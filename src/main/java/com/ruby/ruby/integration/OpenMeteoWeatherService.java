@@ -53,6 +53,8 @@ public class OpenMeteoWeatherService implements WeatherService {
             return Optional.of(new WeatherReport(
                     match.path("name").asString(place),
                     match.path("country").asString(""),
+                    match.path("latitude").asDouble(),
+                    match.path("longitude").asDouble(),
                     now.path("temperature_2m").asDouble(),
                     now.path("apparent_temperature").asDouble(),
                     now.path("relative_humidity_2m").asInt(),

@@ -16,6 +16,8 @@ The project combines speech recognition, speech synthesis, real-time UI updates,
 - Voice search on YouTube and Google, and a website launcher
 - Calculator with spoken maths ("what is 25 times 4", "2 to the power of 10", "50% of 200")
 - Holographic HUD: voice-reactive core, result cards, interface sounds, suggestion chips
+- Holographic globe with live coordinates: turns to any city you ask about; LOCATE shows your real position
+- Cinematic dashboard entrance and 3D parallax tilt that follows the mouse
 - Real readouts: server latency, device battery, network, CPU cores, live weather
 - Jokes, motivation, dice, coin flip, random numbers
 - Boot sequence, animated circuit background, responsive layout for phones
@@ -317,6 +319,8 @@ src/main/resources/static
 ├── hud.js         boot screen, background, live readouts
 ├── voice.js       natural voice selection
 ├── widgets.js     result cards and timers
+├── globe.js       holographic globe (canvas, no libraries)
+├── globe-data.js  land dots from Natural Earth (public domain)
 ├── sfx.js         interface sounds
 ├── sw.js          service worker (installable app)
 └── manifest.webmanifest

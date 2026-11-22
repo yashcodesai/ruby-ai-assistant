@@ -78,7 +78,7 @@ public class KnowledgeCommand implements Command {
                 ? article.summary()
                 : article.summary().substring(0, CARD_LENGTH).replaceFirst("\\s+\\S*$", "") + "…";
         Card card = new Card("knowledge", article.title(), "Wikipedia", cardText,
-                article.imageUrl(), article.pageUrl(), List.of());
+                article.imageUrl(), article.pageUrl(), List.of(), null);
         return Reply.withCard(spoken, card);
     }
 

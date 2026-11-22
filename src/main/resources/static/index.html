@@ -226,11 +226,24 @@
 
       <div id="dateLine"></div>
 
-      <div class="radar">
+      <!-- Holographic globe: your location, or the place you asked about -->
+      <div class="globe-wrap">
 
-        <div class="sweep"></div>
+        <canvas id="globeCanvas" role="img" aria-label="Holographic globe showing the current location"></canvas>
 
-        <div id="blips"></div>
+        <button id="locateBtn" type="button" title="Show my real location">LOCATE</button>
+
+      </div>
+
+      <div class="live-section">
+
+        <h4>COORDINATES</h4>
+
+        <p><span class="label">LAT</span><span class="value" id="globeLat">--</span></p>
+
+        <p><span class="label">LON</span><span class="value" id="globeLon">--</span></p>
+
+        <p><span class="label">TARGET</span><span class="value" id="globeTarget">--</span></p>
 
       </div>
 
@@ -277,6 +290,10 @@
 </audio>
 
 <script src="sfx.js"></script>
+
+<script src="globe-data.js"></script>
+
+<script src="globe.js"></script>
 
 <script src="hud.js"></script>
 

@@ -13,10 +13,15 @@ import java.util.List;
  * @param imageUrl picture to show; may be null
  * @param link     "read more" link; may be null
  * @param facts    label/value pairs, e.g. Humidity: 47%
+ * @param location place the card is about, shown on the holographic globe; may be null
  */
 public record Card(String type, String title, String subtitle, String text,
-                   String imageUrl, String link, List<Fact> facts) {
+                   String imageUrl, String link, List<Fact> facts, Location location) {
 
     public record Fact(String label, String value) {
+    }
+
+    /** @param label short name for the globe marker, e.g. "London" */
+    public record Location(double latitude, double longitude, String label) {
     }
 }
