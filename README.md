@@ -8,23 +8,18 @@ The project combines speech recognition, speech synthesis, real-time UI updates,
 
 # Features
 
-- Voice Recognition
-- Voice Response
-- Interactive Dashboard
-- Real-Time System Monitoring
-- Command History
-- Calculator
-- Notes Memory System
-- Website Launcher
-- Dice Roller
-- Coin Flip
-- Random Number Generator
-- Live Clock
-- Uptime Tracking
-- Dynamic Background Animations
-- Boot Sequence Screen
-- Startup Audio
-- Responsive User Interface
+- Voice recognition with live subtitles, and natural female voice responses (with a voice picker)
+- Greets you by name and time of day; remembers your name and notes on your device
+- Live weather for any city (Open-Meteo, no API key)
+- "Who is…" / "Tell me about…" answers from Wikipedia, with photo cards
+- Timers and spoken reminders
+- Voice search on YouTube and Google, and a website launcher
+- Calculator with spoken maths ("what is 25 times 4", "2 to the power of 10", "50% of 200")
+- Holographic HUD: voice-reactive core, result cards, interface sounds, suggestion chips
+- Real readouts: server latency, device battery, network, CPU cores, live weather
+- Jokes, motivation, dice, coin flip, random numbers
+- Boot sequence, animated circuit background, responsive layout for phones
+- Installable as an app (PWA)
 
 ---
 
@@ -45,13 +40,72 @@ The project combines speech recognition, speech synthesis, real-time UI updates,
 
 ## Browser APIs
 
-- Web Speech API
-- Speech Synthesis API
+- Web Speech API (recognition and synthesis)
+- Web Audio API (interface sounds, microphone level)
 - Canvas API
+- Battery Status and Network Information APIs (where supported)
+- Service Worker and Web App Manifest
+
+## Online services (free, no API keys)
+
+- Open-Meteo for weather
+- Wikipedia for knowledge answers
 
 ---
 
 # Available Commands
+
+You can start any command with "Ruby" or "please", and speak naturally.
+
+## Weather
+
+```text
+what's the weather
+weather in Mumbai
+is it raining in London
+```
+
+---
+
+## Questions (Wikipedia)
+
+```text
+who is APJ Abdul Kalam
+tell me about the Taj Mahal
+what is photosynthesis
+```
+
+---
+
+## Timers and Reminders
+
+```text
+set a timer for 5 minutes
+remind me in 2 minutes to drink water
+cancel all timers
+```
+
+---
+
+## Search
+
+```text
+search YouTube for lofi music
+play Arijit Singh songs
+google Spring Boot tutorial
+```
+
+---
+
+## Your Name
+
+```text
+my name is Priya
+call me Priya
+what is my name
+```
+
+---
 
 ## Greetings
 
@@ -233,9 +287,13 @@ open chatgpt
 
 ## Exit Commands
 
+These also switch voice mode off.
+
 ```text
+stop
 bye
 goodbye
+good night
 ```
 
 ---
@@ -243,15 +301,28 @@ goodbye
 # Project Structure
 
 ```text
-src
-├── controller
-├── service
-├── dto
-├── resources
-│   ├── static
-│   └── templates
-└── application.properties
+src/main/java/com/ruby/ruby
+├── command        one class per command (weather, timers, notes, ...)
+├── config         clock and HTTP client setup
+├── controller     REST API (/api/chat, /api/intro, /api/weather)
+├── dto            request and response objects
+├── integration    Open-Meteo and Wikipedia clients
+├── memory         per-session conversation memory
+└── service        routes each message to the right command
+
+src/main/resources/static
+├── index.html     dashboard
+├── style.css      HUD styling
+├── app.js         conversation, subtitles, voice-reactive core
+├── hud.js         boot screen, background, live readouts
+├── voice.js       natural voice selection
+├── widgets.js     result cards and timers
+├── sfx.js         interface sounds
+├── sw.js          service worker (installable app)
+└── manifest.webmanifest
 ```
+
+See [DEMO.md](DEMO.md) for a presentation script.
 
 ---
 
@@ -307,15 +378,19 @@ RUBY uses the most natural female voice your browser offers, and you can pick an
 - **Mac (Safari/Chrome):** open System Settings → Accessibility → Spoken Content → System Voice → Manage Voices, and download an English voice marked **Premium** (for example Ava or Zoe).
 - **Chrome:** "Google UK English Female" is used automatically.
 
-To credit yourself in answers to "who created you", set `ruby.creator-name` in `src/main/resources/application.properties`.
+## Settings
+
+In `src/main/resources/application.properties`:
+
+- `ruby.weather.default-city`: city used for "what's the weather" and the dashboard panel (default: New Delhi)
+- `ruby.creator-name`: credit yourself in answers to "who created you"
 
 ---
 
 # Future Enhancements
 
-- Weather Integration
-- Search Commands
-- Reminder System
+- Android app (APK)
+- AI answers for open-ended questions
 - Advanced Memory
 - Voice Profiles
 - Theme Switching

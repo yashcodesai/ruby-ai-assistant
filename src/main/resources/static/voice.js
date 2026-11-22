@@ -106,10 +106,11 @@ const RubyVoice = (() => {
     }
 
     /**
-     * Speaks text; calls onStart once and onDone once (finished, failed or cancelled).
+     * Speaks text; calls onStart once, onWord at each spoken word (where the
+     * voice reports it), and onDone once (finished, failed or cancelled).
      * Returns the utterances so callers can keep references alive (Chrome GC bug).
      */
-    function say(text, { onStart = () => {}, onDone = () => {} } = {}) {
+    function say(text, { onStart = () => {}, onDone = () => {}, onWord = () => {} } = {}) {
         const voice = current();
         const settings = settingsFor(voice);
         const parts = sentences(text);
@@ -131,6 +132,7 @@ const RubyVoice = (() => {
             u.pitch = settings.pitch;
             u.volume = settings.volume;
             if (i === 0) u.onstart = onStart;
+            u.onboundary = e => { if (e.name === "word") onWord(); };
             if (i === parts.length - 1) u.onend = finish;
             u.onerror = finish;
             return u;
@@ -153,6 +155,18 @@ const RubyVoice = (() => {
         say,
         score,
         onVoicesChanged: fn => listeners.push(fn),
-        isNatural: voice => score(voice) >= 40
+        isNatural: voice => score(voice) >= 40,
+        /** "Microsoft Aria Online (Natural) - English" -> "ARIA" for the status panel. */
+        shortName(voice) {
+            if (!voice) return "DEFAULT";
+            return voice.name
+                .replace(/^(Microsoft|Google|Apple)\s+/i, "")
+                .replace(/\s*[-(].*$/, "")
+                .replace(/\s+Online$/i, "")
+                .replace(/\bEnglish\b\s*/i, "")
+                .trim()
+                .toUpperCase()
+                .slice(0, 16);
+        }
     };
 })();

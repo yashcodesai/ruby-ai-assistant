@@ -4,23 +4,28 @@ import com.ruby.ruby.command.Command;
 import com.ruby.ruby.command.Message;
 import com.ruby.ruby.command.NameCommand;
 import com.ruby.ruby.command.Names;
+import com.ruby.ruby.command.TimeOfDay;
 import com.ruby.ruby.command.Reply;
 import com.ruby.ruby.memory.ConversationMemory;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
 public class RubyService {
 
     static final String FALLBACK =
-            "I am still learning. I do not know how to answer that yet.";
+            "I am still learning, so I do not know that one yet. Say help to hear what I can do.";
 
     /** Injected in @Order order. */
     private final List<Command> commands;
+    private final Clock clock;
 
-    public RubyService(List<Command> commands) {
+    public RubyService(List<Command> commands, Clock clock) {
         this.commands = commands;
+        this.clock = clock;
     }
 
     public Reply process(String text, ConversationMemory memory) {
@@ -37,13 +42,18 @@ public class RubyService {
         return reply;
     }
 
-    /** Opening line when the page loads: asks for the name if RUBY does not know it yet. */
+    /**
+     * Opening line when the page loads, greeting by the user's local time of day.
+     * Asks for the name if RUBY does not know it yet.
+     */
     public Reply introduce(ConversationMemory memory) {
+        String greeting = TimeOfDay.greeting(ZonedDateTime.now(clock.withZone(memory.zone())));
         return memory.userName()
-                .map(name -> Reply.say("Welcome back, " + name + ". How can I help you?"))
+                .map(name -> Reply.say(greeting + ", " + name + ". All systems are online. How can I help you?"))
                 .orElseGet(() -> {
                     memory.askForName();
-                    return Reply.say("Hello, I am RUBY, your voice assistant. What is your name?");
+                    return Reply.say(greeting + ". I am RUBY, your personal assistant. "
+                            + "All systems are online. May I know your name?");
                 });
     }
 

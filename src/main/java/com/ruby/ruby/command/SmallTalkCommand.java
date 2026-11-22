@@ -10,7 +10,7 @@ public class SmallTalkCommand implements Command {
 
     @Override
     public boolean matches(Message message) {
-        return message.has("thank you", "thanks", "thank u", "hear me", "weather", "temperature outside",
+        return message.has("thank you", "thanks", "thank u", "hear me",
                 "nice day", "good day");
     }
 
@@ -18,9 +18,6 @@ public class SmallTalkCommand implements Command {
     public Reply execute(Message message, ConversationMemory memory) {
         if (message.has("hear me")) {
             return Reply.say("Yes, I can hear you clearly.");
-        }
-        if (message.has("weather", "temperature outside")) {
-            return Reply.say("I cannot check the weather yet. Try saying open Google.");
         }
         if (message.has("nice day", "good day")) {
             return Reply.say("Thank you. You too.");

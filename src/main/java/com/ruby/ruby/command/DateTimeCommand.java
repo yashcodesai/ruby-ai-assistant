@@ -5,8 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -27,11 +26,7 @@ public class DateTimeCommand implements Command {
 
     private final Clock clock;
 
-    public DateTimeCommand() {
-        this(Clock.systemDefaultZone());
-    }
-
-    DateTimeCommand(Clock clock) {
+    public DateTimeCommand(Clock clock) {
         this.clock = clock;
     }
 
@@ -43,8 +38,10 @@ public class DateTimeCommand implements Command {
 
     @Override
     public Reply execute(Message message, ConversationMemory memory) {
-        String time = LocalTime.now(clock).format(TIME);
-        String date = LocalDate.now(clock).format(DATE);
+        // The user's timezone, not the server's: they may be far apart once hosted.
+        ZonedDateTime now = ZonedDateTime.now(clock.withZone(memory.zone()));
+        String time = now.format(TIME);
+        String date = now.format(DATE);
         if (message.has("date and time", "time and date")
                 || (asksTime(message) && asksDate(message))) {
             return Reply.say("It is " + time + " on " + date + ".");
@@ -55,7 +52,7 @@ public class DateTimeCommand implements Command {
         if (asksDate(message)) {
             return Reply.say("Today's date is " + date + ".");
         }
-        return Reply.say("Today is " + LocalDate.now(clock).format(DAY) + ".");
+        return Reply.say("Today is " + now.format(DAY) + ".");
     }
 
     private static boolean asksTime(Message m) {

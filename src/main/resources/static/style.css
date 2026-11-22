@@ -899,6 +899,8 @@ body::before{
     .brand {
 
         font-size: 15px;
+
+        letter-spacing: 2px;
     }
 
     .boot-container h1 {
@@ -948,4 +950,879 @@ body::before{
 .status {
 
     flex-shrink: 0;
+}
+
+/* =====================================================
+   RUBY v2 HUD
+   ===================================================== */
+
+/* ---------- Scanlines over the whole interface ---------- */
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 20000;
+
+    pointer-events: none;
+
+    background: repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, .025) 0,
+            rgba(255, 255, 255, .025) 1px,
+            transparent 1px,
+            transparent 3px);
+}
+
+/* ---------- Corner brackets on panels ---------- */
+
+.hud-frame {
+
+    position: relative;
+}
+
+.hud-frame::before,
+.hud-frame::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 18px;
+
+    height: 18px;
+
+    pointer-events: none;
+}
+
+.hud-frame::before {
+
+    top: -1px;
+
+    left: -1px;
+
+    border-top: 2px solid var(--gold);
+
+    border-left: 2px solid var(--gold);
+}
+
+.hud-frame::after {
+
+    bottom: -1px;
+
+    right: -1px;
+
+    border-bottom: 2px solid var(--gold);
+
+    border-right: 2px solid var(--gold);
+}
+
+/* ---------- Panel readouts: LABEL ........ VALUE ---------- */
+
+.status-section,
+.live-section {
+
+    margin-bottom: 18px;
+}
+
+.status-section h4,
+.live-section h4 {
+
+    color: #fff;
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+}
+
+.panel p {
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 6px;
+
+    font-size: 12px;
+
+    margin-bottom: 9px;
+}
+
+.panel .label {
+
+    white-space: nowrap;
+
+    color: #bdbdbd;
+}
+
+.panel p .value {
+
+    color: var(--gold);
+
+    text-align: right;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    max-width: 60%;
+}
+
+/* dotted leader between label and value */
+.panel p::before {
+
+    content: "";
+
+    order: 1;
+
+    flex: 1;
+
+    border-bottom: 1px dotted rgba(255, 180, 0, .3);
+
+    transform: translateY(-3px);
+}
+
+.panel p .label {
+
+    order: 0;
+}
+
+.panel p .value {
+
+    order: 2;
+
+    margin-left: 0;
+}
+
+.value.alert {
+
+    color: var(--red) !important;
+
+    text-shadow: 0 0 8px var(--red);
+}
+
+.value.live {
+
+    color: #00ff88 !important;
+
+    text-shadow: 0 0 8px #00ff88;
+}
+
+/* brief glitch when a readout changes */
+.flash {
+
+    animation: glitch .45s steps(2);
+}
+
+@keyframes glitch {
+
+    0%   { opacity: .2; transform: translateX(-2px); }
+    30%  { opacity: 1;  transform: translateX(2px); }
+    60%  { opacity: .5; transform: translateX(-1px); }
+    100% { opacity: 1;  transform: none; }
+}
+
+.empty {
+
+    color: #777;
+
+    font-size: 12px;
+}
+
+#dateLine {
+
+    margin: -15px 0 15px;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #bdbdbd;
+}
+
+/* ---------- Top bar sound toggle ---------- */
+
+#soundBtn {
+
+    margin-left: auto;
+
+    margin-right: 20px;
+
+    padding: 6px 12px;
+
+    border: 1px solid rgba(255, 180, 0, .5);
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: var(--gold);
+
+    font-family: 'Orbitron', sans-serif;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+}
+
+#soundBtn[aria-pressed="false"] {
+
+    color: #777;
+
+    border-color: #444;
+}
+
+/* ---------- Reactor: tick ring + voice reactivity ---------- */
+
+.reactor {
+
+    --level: 0;
+}
+
+.ticks {
+
+    width: 380px;
+
+    height: 380px;
+
+    background: repeating-conic-gradient(
+            rgba(255, 180, 0, .55) 0deg 1deg,
+            transparent 1deg 6deg);
+
+    -webkit-mask: radial-gradient(circle, transparent 66%, #000 67%, #000 72%, transparent 73%);
+
+    mask: radial-gradient(circle, transparent 66%, #000 67%, #000 72%, transparent 73%);
+
+    animation: rotateReverse 90s linear infinite;
+}
+
+/* "scale" composes with the existing transform animations */
+.core {
+
+    scale: calc(1 + var(--level) * .14);
+
+    filter: brightness(calc(1 + var(--level) * .7));
+}
+
+.energy {
+
+    scale: calc(1 + var(--level) * .3);
+}
+
+.middle,
+.inner {
+
+    filter: brightness(calc(1 + var(--level) * 1.2));
+}
+
+.voice-wave {
+
+    position: absolute;
+
+    bottom: 92px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    height: 50px;
+}
+
+.voice-wave span {
+
+    --k: 1;
+
+    width: 4px;
+
+    height: calc(3px + var(--level) * var(--k) * 46px);
+
+    border-radius: 2px;
+
+    background: linear-gradient(to top, var(--red), var(--gold));
+
+    box-shadow: 0 0 6px rgba(255, 180, 0, .6);
+}
+
+.voice-wave span:nth-child(1), .voice-wave span:nth-child(9) { --k: .35; }
+.voice-wave span:nth-child(2), .voice-wave span:nth-child(8) { --k: .6; }
+.voice-wave span:nth-child(3), .voice-wave span:nth-child(7) { --k: .85; }
+.voice-wave span:nth-child(4), .voice-wave span:nth-child(6) { --k: 1; }
+.voice-wave span:nth-child(5) { --k: .75; }
+
+/* ---------- Live subtitles ---------- */
+
+#subtitles {
+
+    width: min(620px, 100%);
+
+    min-height: 3.6em;
+
+    margin-top: 4px;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.sub-you {
+
+    color: #cfcfcf;
+}
+
+.sub-you.interim {
+
+    opacity: .65;
+
+    font-style: italic;
+}
+
+.sub-ruby {
+
+    color: var(--gold);
+
+    text-shadow: 0 0 8px rgba(255, 180, 0, .5);
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 3;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.sub-ruby.typing::after {
+
+    content: "▌";
+
+    animation: pulseDot .8s infinite;
+}
+
+/* ---------- ACTIVATE button while voice mode is on ---------- */
+
+#listenBtn.active {
+
+    background: linear-gradient(45deg, #b3001b, var(--red));
+
+    color: #fff;
+
+    animation: activePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes activePulse {
+
+    50% {
+        box-shadow:
+                0 0 35px rgba(255, 59, 31, .9),
+                0 0 70px rgba(255, 59, 31, .5);
+    }
+}
+
+/* ---------- Suggestion chips ---------- */
+
+#suggestions {
+
+    position: relative;
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    max-width: 600px;
+
+    margin-top: 10px;
+}
+
+.chip {
+
+    padding: 5px 10px;
+
+    border: 1px solid rgba(255, 180, 0, .35);
+
+    border-radius: 14px;
+
+    background: rgba(255, 180, 0, .06);
+
+    color: #e8e8e8;
+
+    font-family: 'Orbitron', sans-serif;
+
+    font-size: 10px;
+
+    letter-spacing: .5px;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+.chip:hover {
+
+    border-color: var(--gold);
+
+    color: var(--gold);
+
+    box-shadow: 0 0 12px rgba(255, 180, 0, .4);
+}
+
+/* ---------- Holographic result card ---------- */
+
+.center {
+
+    position: relative;
+}
+
+#cardStage {
+
+    position: absolute;
+
+    top: 10px;
+
+    left: 50%;
+
+    z-index: 10000;
+
+    width: min(420px, 94%);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transform: translateX(-50%) scale(.92);
+
+    transition: opacity .35s ease, transform .35s ease;
+}
+
+#cardStage.visible {
+
+    opacity: 1;
+
+    pointer-events: auto;
+
+    transform: translateX(-50%) scale(1);
+}
+
+.holo-card {
+
+    position: relative;
+
+    padding: 16px 18px 18px;
+
+    border: 1px solid rgba(255, 180, 0, .55);
+
+    background:
+            linear-gradient(160deg, rgba(255, 180, 0, .10), rgba(255, 59, 31, .05) 60%),
+            rgba(8, 4, 0, .88);
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+            0 0 25px rgba(255, 180, 0, .25),
+            inset 0 0 30px rgba(255, 180, 0, .06);
+
+    animation: cardIn .5s ease;
+}
+
+.holo-card::before,
+.holo-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 22px;
+
+    height: 22px;
+
+    pointer-events: none;
+}
+
+.holo-card::before {
+
+    top: -2px;
+
+    left: -2px;
+
+    border-top: 3px solid var(--gold);
+
+    border-left: 3px solid var(--gold);
+}
+
+.holo-card::after {
+
+    bottom: -2px;
+
+    right: -2px;
+
+    border-bottom: 3px solid var(--gold);
+
+    border-right: 3px solid var(--gold);
+}
+
+@keyframes cardIn {
+
+    0%   { clip-path: inset(0 0 100% 0); filter: brightness(2); }
+    100% { clip-path: inset(0 0 0 0);    filter: none; }
+}
+
+.card-head {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.card-kicker {
+
+    white-space: nowrap;
+
+    color: var(--gold);
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+}
+
+.card-close {
+
+    border: none;
+
+    background: transparent;
+
+    color: #aaa;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.card-close:hover {
+
+    color: var(--gold);
+}
+
+.card-title {
+
+    color: var(--gold);
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    text-shadow: 0 0 8px rgba(255, 180, 0, .5);
+}
+
+.card-subtitle {
+
+    margin: 3px 0 10px;
+
+    color: #bbb;
+
+    font-size: 11px;
+
+    letter-spacing: 1px;
+}
+
+.weather-main {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 8px;
+}
+
+.weather-icon {
+
+    font-size: 44px;
+
+    filter: drop-shadow(0 0 10px rgba(255, 180, 0, .6));
+}
+
+.weather-temp {
+
+    color: #fff;
+
+    font-size: 46px;
+
+    font-weight: 900;
+
+    text-shadow: 0 0 15px rgba(255, 180, 0, .7);
+}
+
+.card-facts {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 8px;
+}
+
+.fact {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    padding: 8px;
+
+    border: 1px solid rgba(255, 180, 0, .2);
+
+    background: rgba(255, 180, 0, .04);
+}
+
+.fact-label {
+
+    color: #999;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.fact-value {
+
+    color: var(--gold);
+
+    font-size: 14px;
+}
+
+.card-knowledge {
+
+    display: flex;
+
+    gap: 14px;
+
+    align-items: flex-start;
+}
+
+.card-image {
+
+    flex-shrink: 0;
+
+    width: 100px;
+
+    height: 125px;
+
+    object-fit: cover;
+
+    border: 1px solid rgba(255, 180, 0, .5);
+
+    box-shadow: 0 0 12px rgba(255, 180, 0, .3);
+}
+
+.card-text {
+
+    min-width: 0;
+}
+
+.card-body {
+
+    max-height: 170px;
+
+    overflow-y: auto;
+
+    color: #ddd;
+
+    font-family: system-ui, sans-serif;
+
+    font-size: 13px;
+
+    line-height: 1.55;
+}
+
+.card-link {
+
+    display: inline-block;
+
+    margin-top: 10px;
+
+    color: var(--gold);
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    text-decoration: none;
+}
+
+/* ---------- Active timers ---------- */
+
+.timer-row {
+
+    margin-bottom: 12px;
+}
+
+.timer-top {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 12px;
+}
+
+.timer-label {
+
+    flex: 1;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: #ddd;
+}
+
+.timer-left {
+
+    color: var(--gold);
+
+    font-variant-numeric: tabular-nums;
+}
+
+.timer-cancel {
+
+    border: none;
+
+    background: transparent;
+
+    color: #888;
+
+    cursor: pointer;
+}
+
+.timer-cancel:hover {
+
+    color: var(--red);
+}
+
+.timer-bar {
+
+    height: 3px;
+
+    margin-top: 5px;
+
+    background: rgba(255, 180, 0, .15);
+}
+
+.timer-fill {
+
+    height: 100%;
+
+    background: linear-gradient(to right, var(--red), var(--gold));
+
+    box-shadow: 0 0 6px var(--gold);
+
+    transition: width 1s linear;
+}
+
+/* ---------- Fit the reactor on shorter laptop screens ---------- */
+
+@media (max-height: 860px) and (min-width: 641px) {
+
+    .reactor {
+
+        transform: scale(.82);
+
+        /* 420px * .18 / 2 = 38px of empty space on each side */
+        margin: -38px;
+    }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 640px) {
+
+    #soundBtn {
+
+        margin-right: 8px;
+
+        padding: 4px 6px;
+
+        font-size: 12px;
+    }
+
+    /* icon only on phones, so the brand name has room */
+    .sound-text {
+
+        display: none;
+    }
+
+    .status {
+
+        gap: 6px;
+    }
+
+    #cardStage {
+
+        position: fixed;
+
+        top: auto;
+
+        bottom: 12px;
+
+        left: 12px;
+
+        right: 12px;
+
+        width: auto;
+
+        transform: translateY(20px);
+    }
+
+    #cardStage.visible {
+
+        transform: none;
+    }
+
+    .card-facts {
+
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-image {
+
+        width: 80px;
+
+        height: 100px;
+    }
 }

@@ -1,12 +1,19 @@
 package com.ruby.ruby.controller;
 
+import com.ruby.ruby.command.Names;
 import com.ruby.ruby.command.Reply;
 import com.ruby.ruby.dto.ChatRequest;
 import com.ruby.ruby.dto.ChatResponse;
+import com.ruby.ruby.dto.IntroRequest;
 import com.ruby.ruby.dto.SessionInfo;
+import com.ruby.ruby.integration.ServiceUnavailableException;
+import com.ruby.ruby.integration.WeatherReport;
+import com.ruby.ruby.integration.WeatherService;
 import com.ruby.ruby.memory.ConversationMemory;
 import com.ruby.ruby.service.RubyService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +30,14 @@ public class RubyController {
     private static final String MEMORY_KEY = "ruby.memory";
 
     private final RubyService rubyService;
+    private final WeatherService weatherService;
+    private final String defaultCity;
 
-    public RubyController(RubyService rubyService) {
+    public RubyController(RubyService rubyService, WeatherService weatherService,
+                          @Value("${ruby.weather.default-city:New Delhi}") String defaultCity) {
         this.rubyService = rubyService;
+        this.weatherService = weatherService;
+        this.defaultCity = defaultCity;
     }
 
     @PostMapping("/chat")
@@ -43,15 +55,26 @@ public class RubyController {
         }
 
         ConversationMemory memory = memoryFor(session);
+        memory.setZone(request.timeZone());
         Reply reply = rubyService.process(message, memory);
-        return ResponseEntity.ok(toResponse(reply, memory));
+        return ResponseEntity.ok(ChatResponse.of(reply, memory));
     }
 
-    /** RUBY's opening line after the boot screen; asks for the user's name if unknown. */
+    /**
+     * RUBY's opening line after the boot screen. Restores the name and notes the
+     * device saved earlier, then greets the user (or asks for their name).
+     */
     @PostMapping("/intro")
-    public ChatResponse intro(HttpSession session) {
+    public ChatResponse intro(@RequestBody(required = false) IntroRequest request, HttpSession session) {
         ConversationMemory memory = memoryFor(session);
-        return toResponse(rubyService.introduce(memory), memory);
+        if (request != null) {
+            memory.setZone(request.timeZone());
+            if (memory.userName().isEmpty() && request.userName() != null) {
+                Names.clean(request.userName()).ifPresent(memory::setUserName);
+            }
+            memory.restoreNotes(request.notes());
+        }
+        return ChatResponse.of(rubyService.introduce(memory), memory);
     }
 
     /** Lets the boot screen welcome a returning user by name. */
@@ -60,17 +83,24 @@ public class RubyController {
         return new SessionInfo(memoryFor(session).userName().orElse(null));
     }
 
+    /** Live weather for the dashboard panel (default city). */
+    @GetMapping("/weather")
+    public ResponseEntity<WeatherReport> weather() {
+        try {
+            return weatherService.current(defaultCity)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (ServiceUnavailableException e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        }
+    }
+
     @GetMapping("/hello")
     public String hello() {
         return "RUBY is online";
     }
 
-    private static ChatResponse toResponse(Reply reply, ConversationMemory memory) {
-        return new ChatResponse(reply.text(), reply.url(), reply.stopListening(),
-                memory.userName().orElse(null));
-    }
-
-    /** Each browser session gets its own notes and history. */
+    /** Each browser session gets its own notes, history and name. */
     private static ConversationMemory memoryFor(HttpSession session) {
         synchronized (WebUtils.getSessionMutex(session)) {
             ConversationMemory memory = (ConversationMemory) session.getAttribute(MEMORY_KEY);

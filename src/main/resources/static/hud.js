@@ -50,16 +50,15 @@ function startBootSequence(){
         "WELCOME"
     ];
 
-    // Returning users (same browser session) are welcomed by name.
-    fetch("/api/session")
-        .then(res => res.ok ? res.json() : null)
-        .then(session => {
-            if(session && session.userName){
-                messages[messages.length - 1] =
-                    "WELCOME BACK " + session.userName.toUpperCase();
-            }
-        })
-        .catch(() => {});
+    // Returning users are welcomed by the name saved on this device.
+    try {
+        const saved = JSON.parse(localStorage.getItem("ruby.profile") || "{}");
+        if (typeof saved.userName === "string" && saved.userName) {
+            messages[messages.length - 1] = "WELCOME BACK " + saved.userName.toUpperCase();
+        }
+    } catch (e) {
+        // ignore unreadable storage
+    }
 
     let index = 0;
 
@@ -380,12 +379,19 @@ if (canvas) {
     requestAnimationFrame(animate);
 }
 
-// CLOCK
+// CLOCK + DATE
 
 const clock = document.getElementById("clock");
+const dateLine = document.getElementById("dateLine");
 
 function updateClock() {
-    if (clock) clock.textContent = new Date().toLocaleTimeString();
+    const now = new Date();
+    if (clock) clock.textContent = now.toLocaleTimeString();
+    if (dateLine) {
+        dateLine.textContent = now.toLocaleDateString(undefined, {
+            weekday: "long", day: "numeric", month: "long", year: "numeric"
+        }).toUpperCase();
+    }
 }
 
 updateClock();
@@ -410,22 +416,26 @@ setInterval(() => {
 
 }, 1000);
 
-// CPU + MEMORY (decorative values) and real backend LATENCY
+// HELPERS
 
-const cpu = document.getElementById("cpuLoad");
-const memory = document.getElementById("memoryUsage");
-const latency = document.getElementById("latency");
+function setReadout(id, text, alert = false) {
+    const node = document.getElementById(id);
+    if (!node) return;
+    if (node.textContent !== text) {
+        node.textContent = text;
+        // Brief glitch flash when a value changes.
+        node.classList.remove("flash");
+        void node.offsetWidth;
+        node.classList.add("flash");
+    }
+    node.classList.toggle("alert", alert);
+}
+
+// SERVER STATUS + REAL LATENCY
+
 const serverStatus = document.getElementById("serverStatus");
 const statusDot = document.querySelector(".status .dot");
 
-setInterval(() => {
-
-    if (cpu) cpu.textContent = Math.floor(15 + Math.random() * 25) + "%";
-    if (memory) memory.textContent = Math.floor(25 + Math.random() * 35) + "%";
-
-}, 2000);
-
-// Pings the backend so ONLINE/OFFLINE and latency are real, not invented.
 async function checkServer() {
 
     const started = performance.now();
@@ -434,12 +444,14 @@ async function checkServer() {
         const res = await fetch("/api/hello", { cache: "no-store" });
         if (!res.ok) throw new Error("HTTP " + res.status);
 
-        if (latency) latency.textContent = Math.round(performance.now() - started) + "ms";
+        setReadout("latency", Math.round(performance.now() - started) + " MS");
+        setReadout("coreState", "ONLINE");
         if (serverStatus) serverStatus.textContent = "RUBY ONLINE";
         if (statusDot) statusDot.classList.remove("offline");
 
     } catch (error) {
-        if (latency) latency.textContent = "--";
+        setReadout("latency", "--");
+        setReadout("coreState", "OFFLINE", true);
         if (serverStatus) serverStatus.textContent = "RUBY OFFLINE";
         if (statusDot) statusDot.classList.add("offline");
     }
@@ -447,6 +459,72 @@ async function checkServer() {
 
 checkServer();
 setInterval(checkServer, 5000);
+
+// DEVICE READOUTS (real values from the browser; "N/A" where unsupported)
+
+setReadout("cpuCores", navigator.hardwareConcurrency ? String(navigator.hardwareConcurrency) : "N/A");
+setReadout("deviceMemory", navigator.deviceMemory ? navigator.deviceMemory + " GB+" : "N/A");
+
+function updateNetwork() {
+    const connection = navigator.connection;
+    if (!navigator.onLine) {
+        setReadout("network", "OFFLINE", true);
+        return;
+    }
+    const type = connection && connection.effectiveType ? " · " + connection.effectiveType.toUpperCase() : "";
+    setReadout("network", "ONLINE" + type);
+}
+
+updateNetwork();
+window.addEventListener("online", updateNetwork);
+window.addEventListener("offline", updateNetwork);
+if (navigator.connection) navigator.connection.addEventListener("change", updateNetwork);
+
+if (navigator.getBattery) {
+    navigator.getBattery().then(battery => {
+        const show = () => setReadout("battery",
+            Math.round(battery.level * 100) + "%" + (battery.charging ? " ⚡" : ""),
+            battery.level < 0.15 && !battery.charging);
+        show();
+        battery.addEventListener("levelchange", show);
+        battery.addEventListener("chargingchange", show);
+    }).catch(() => setReadout("battery", "N/A"));
+} else {
+    setReadout("battery", "N/A");
+}
+
+// LIVE WEATHER PANEL (refreshes every 10 minutes)
+
+async function updateWeather() {
+    try {
+        const res = await fetch("/api/weather");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const w = await res.json();
+        setReadout("temperature", Math.round(w.temperature) + "°C");
+        setReadout("conditions", describeWeather(w.code, w.day).toUpperCase());
+        setReadout("location", w.city.toUpperCase());
+    } catch (error) {
+        setReadout("temperature", "--");
+        setReadout("conditions", "UNAVAILABLE");
+    }
+}
+
+/** Short labels for the panel; the full description comes with voice answers. */
+function describeWeather(code, day) {
+    if (code === 0) return day ? "Clear" : "Clear night";
+    if (code <= 2) return "Partly cloudy";
+    if (code === 3) return "Overcast";
+    if (code <= 48) return "Fog";
+    if (code <= 57) return "Drizzle";
+    if (code <= 67) return "Rain";
+    if (code <= 77) return "Snow";
+    if (code <= 82) return "Showers";
+    if (code <= 86) return "Snow showers";
+    return "Thunderstorm";
+}
+
+updateWeather();
+setInterval(updateWeather, 10 * 60 * 1000);
 
 // RADAR BLIPS
 

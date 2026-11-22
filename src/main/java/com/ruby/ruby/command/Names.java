@@ -53,7 +53,7 @@ public final class Names {
     }
 
     /** 1-3 words of letters, not a filler word; "priya sharma" -> "Priya Sharma". */
-    static Optional<String> clean(String raw) {
+    public static Optional<String> clean(String raw) {
         String text = raw.trim().replaceAll("[.!?,]+$", "").trim();
         String[] words = text.split("\\s+");
         if (text.isEmpty() || text.length() > MAX_LENGTH || words.length > MAX_WORDS) {

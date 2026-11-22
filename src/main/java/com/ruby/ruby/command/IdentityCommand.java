@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Order(50)
 public class IdentityCommand implements Command {
 
-    static final String CAPABILITIES = "I can tell you the time, date and day, do calculations, "
-            + "remember, read and clear notes, open Google, YouTube, GitHub or ChatGPT, "
-            + "roll dice, flip coins, pick random numbers, tell jokes and motivate you. "
-            + "Say stop to turn voice mode off.";
+    static final String CAPABILITIES = "I can check the weather, answer questions like who is "
+            + "or tell me about, set timers and reminders, search YouTube and Google, open websites, "
+            + "do calculations, tell the time and date, and remember notes for you. "
+            + "I can also tell jokes, roll dice and flip coins. Say stop to turn voice mode off.";
 
     private final String creatorName;
 

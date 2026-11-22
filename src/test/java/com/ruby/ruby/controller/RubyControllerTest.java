@@ -50,7 +50,7 @@ class RubyControllerTest {
                 .andExpect(jsonPath("$.userName").doesNotExist());
 
         mvc.perform(post("/api/intro").session(session))
-                .andExpect(jsonPath("$.response", containsString("What is your name")))
+                .andExpect(jsonPath("$.response", containsString("May I know your name")))
                 .andExpect(jsonPath("$.userName").doesNotExist());
 
         chat("{\"message\":\"my name is Priya\"}", session)
@@ -80,6 +80,37 @@ class RubyControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.trace").doesNotExist())
                 .andExpect(jsonPath("$.message").doesNotExist());
+    }
+
+    @Test
+    void introRestoresNameAndNotesSavedOnDevice() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        mvc.perform(post("/api/intro").session(session).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userName\":\"neha\",\"notes\":[\"buy milk\",\"  \"],"
+                                + "\"timeZone\":\"Asia/Kolkata\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.response", containsString(", Neha. All systems are online.")))
+                .andExpect(jsonPath("$.userName").value("Neha"))
+                .andExpect(jsonPath("$.notes.length()").value(1))
+                .andExpect(jsonPath("$.notes[0]").value("buy milk"));
+
+        chat("{\"message\":\"remember call dad\"}", session)
+                .andExpect(jsonPath("$.notes.length()").value(2));
+    }
+
+    @Test
+    void introIgnoresInvalidSavedName() throws Exception {
+        mvc.perform(post("/api/intro").session(new MockHttpSession()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userName\":\"<script>1</script>\"}"))
+                .andExpect(jsonPath("$.userName").doesNotExist())
+                .andExpect(jsonPath("$.response", containsString("May I know your name")));
+    }
+
+    @Test
+    void timerReplyCarriesCountdown() throws Exception {
+        chat("{\"message\":\"set a timer for 10 seconds\"}", new MockHttpSession())
+                .andExpect(jsonPath("$.timer.seconds").value(10))
+                .andExpect(jsonPath("$.timer.doneText").exists());
     }
 
     @Test
