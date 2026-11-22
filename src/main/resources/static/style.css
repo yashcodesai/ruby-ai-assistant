@@ -2183,9 +2183,13 @@ body::after {
 
     position: relative;
 
-    width: min(210px, 100%);
+    /* fill the panel; the planet itself is ~70% of this, the rest is halo,
+       orbit ring and arcs rising above the surface */
+    width: 100%;
 
-    margin: 0 auto 16px;
+    max-width: 300px;
+
+    margin: -6px auto 10px;
 }
 
 #globeCanvas {
@@ -2195,24 +2199,6 @@ body::after {
     width: 100%;
 
     aspect-ratio: 1;
-}
-
-/* faint orbit ring around the globe */
-.globe-wrap::before {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 4%;
-
-    border: 1px dashed rgba(255, 180, 0, .25);
-
-    border-radius: 50%;
-
-    animation: rotate 30s linear infinite;
-
-    pointer-events: none;
 }
 
 #locateBtn {
