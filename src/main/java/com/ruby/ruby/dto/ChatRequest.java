@@ -1,17 +1,8 @@
 package com.ruby.ruby.dto;
 
-public class ChatRequest {
-
-    private String message;
-
-    public ChatRequest() {
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+/**
+ * @param message  what the user said or typed
+ * @param timeZone the browser's IANA timezone, e.g. "Asia/Kolkata"; optional
+ */
+public record ChatRequest(String message, String timeZone) {
 }

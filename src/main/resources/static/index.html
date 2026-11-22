@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RUBY AI - SAXENA INDUSTRIES</title>
+<title>RUBY AI - YASH INDUSTRIES</title>
+<meta name="description" content="RUBY, a voice-controlled AI assistant by Yash Industries.">
+<meta name="theme-color" content="#020202">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -15,7 +20,24 @@
 
   <div class="boot-container">
 
-    <h1>Ý̴̥͙̘̇̈́̇̃͒̿́͘͘͝͝ͅĄ̵̺̰̻̻͔͇͓̈́̓͛̏̈́͌͋̄̑͆̏Ś̸͙̺̥̰̯͙̭͆̏͂Ḩ̵̛̘̤͙͔̝̫̖̻̦̞͙̺̅̿͘͝ I̸̺̺͎̰̥̜̯̼̮̰͖̜͂͆̿̈́̿̔N̸̡̧͕͙̼̻̳̦̪̞̯͎̦͓̏̒͌͑͒͊̾͌̑̅̕͝ͅḐ̷̮̳̣̟͉͋͗̓̕͜U̴̡̢̱̳̳͓̗͔̮̔͜͜͜Ś̸͙̺̥̰̯͙̭͆̏͂T̷̡̧̬̲̭̦̘̩̊̉͛̓̓̌͌̕Ŗ̷͇̙̰̭̪̟̺̲̜̹͔̎̍́ͅI̸̺̺͎̰̥̜̯̼̮̰͖̜͂͆̿̈́̿̔Ȩ̸̪̯̗̘̥̣̲̣̣͍͚͙̥̩́̀̈̆͑Ś̸͙̺̥̰̯͙̭͆̏͂ </h1>
+    <!-- Logo lockup: emblem + wordmark -->
+    <h1 class="boot-logo" aria-label="Yash Industries">
+
+      <svg class="boot-emblem" viewBox="0 0 120 120" aria-hidden="true">
+        <polygon class="emblem-outer" points="60,6 106.8,33 106.8,87 60,114 13.2,87 13.2,33"/>
+        <polygon class="emblem-inner" points="60,22 93,41 93,79 60,98 27,79 27,41"/>
+        <path class="emblem-mark" d="M40 38 L60 62 L80 38 M60 62 L60 86"/>
+        <circle class="emblem-dot" cx="60" cy="62" r="3.5"/>
+      </svg>
+
+      <span class="boot-wordmark" aria-hidden="true">
+        <span class="wordmark-main">YASH</span>
+        <span class="wordmark-sub">INDUSTRIES</span>
+      </span>
+
+    </h1>
+
+    <div class="boot-tagline">RUBY&nbsp;AI &nbsp;·&nbsp; PERSONAL ASSISTANT SYSTEM</div>
 
     <div id="bootText"></div>
 
@@ -23,6 +45,11 @@
 
       <div id="progressBar"></div>
 
+    </div>
+
+    <div class="boot-progress-label">
+      <span>SYSTEM INITIALIZATION</span>
+      <span id="bootPercent">0%</span>
     </div>
 
   </div>
@@ -37,15 +64,29 @@
 
   <header class="topbar">
 
-    <div class="brand">
-      𝒀𝑨𝑺𝑯 𝑰𝑵𝑫𝑼𝑺𝑻𝑹𝑰𝑬𝑺
+    <div class="brand" role="img" aria-label="Yash Industries">
+
+      <svg class="brand-emblem" viewBox="0 0 120 120" aria-hidden="true">
+        <polygon class="e-outer" points="60,6 106.8,33 106.8,87 60,114 13.2,87 13.2,33"/>
+        <polygon class="e-inner" points="60,22 93,41 93,79 60,98 27,79 27,41"/>
+        <path class="e-mark" d="M40 38 L60 62 L80 38 M60 62 L60 86"/>
+        <circle class="e-dot" cx="60" cy="62" r="4"/>
+      </svg>
+
+      <span class="brand-wordmark" aria-hidden="true">
+        <span class="brand-main">YASH</span>
+        <span class="brand-sub">INDUSTRIES</span>
+      </span>
+
     </div>
+
+    <button id="soundBtn" type="button" aria-pressed="true" title="Interface sounds">SOUND ON</button>
 
     <div class="status">
 
       <span class="dot"></span>
 
-      RUBY ONLINE
+      <span id="serverStatus">CONNECTING...</span>
 
     </div>
 
@@ -53,9 +94,9 @@
 
   <div class="layout">
 
-    <!-- LEFT PANEL -->
+    <!-- LEFT PANEL: real readouts -->
 
-    <aside class="panel">
+    <aside class="panel hud-frame">
 
       <h3>SYSTEM STATUS</h3>
 
@@ -63,67 +104,58 @@
 
         <h4>AI CORE</h4>
 
-        <p>CORE STATUS ...... ONLINE</p>
+        <p><span class="label">CORE</span><span class="value" id="coreState">BOOTING</span></p>
 
-        <p>VOICE ENGINE ..... ACTIVE</p>
+        <p><span class="label">MICROPHONE</span><span class="value" id="micState">READY</span></p>
 
-        <p>MICROPHONE ....... READY</p>
+        <p><span class="label">VOICE</span><span class="value" id="voiceName">--</span></p>
 
-        <p>SPEECH OUTPUT .... CONNECTED</p>
-
-      </div>
-
-      <div class="status-section">
-
-        <h4>PERFORMANCE</h4>
-
-        <p>
-          CPU LOAD .........
-          <span id="cpuLoad">18%</span>
-        </p>
-
-        <p>
-          MEMORY USAGE .....
-          <span id="memoryUsage">34%</span>
-        </p>
-
-        <p>
-          NETWORK ..........
-          ONLINE
-        </p>
-
-        <p>
-          LATENCY ..........
-          <span id="latency">12ms</span>
-        </p>
+        <p><span class="label">LATENCY</span><span class="value" id="latency">--</span></p>
 
       </div>
 
       <div class="status-section">
 
-        <h4>MISSION DATA</h4>
+        <h4>DEVICE</h4>
 
-        <p>
-          UPTIME ...........
-          <span id="uptime">
-                        00:00:00
-                    </span>
-        </p>
+        <p><span class="label">BATTERY</span><span class="value" id="battery">--</span></p>
 
-        <p>
-          MODE .............
-          ASSISTANT
-        </p>
+        <p><span class="label">NETWORK</span><span class="value" id="network">--</span></p>
 
-        <p>
-          SECURITY .........
-          MAXIMUM
-        </p>
+        <p><span class="label">CPU CORES</span><span class="value" id="cpuCores">--</span></p>
 
-        <p>
-          VERSION ..........
-          RUBY v1.0
-        </p>
+        <p><span class="label">MEMORY</span><span class="value" id="deviceMemory">--</span></p>
+
+      </div>
+
+      <div class="status-section">
+
+        <h4>SESSION</h4>
+
+        <p><span class="label">USER</span><span class="value" id="userLabel">UNKNOWN</span></p>
+
+        <p><span class="label">UPTIME</span><span class="value" id="uptime">00:00:00</span></p>
+
+        <p><span class="label">COMMANDS</span><span class="value" id="commandCount">0</span></p>
+
+        <p><span class="label">NOTES</span><span class="value" id="noteCount">0</span></p>
+
+        <p><span class="label">VERSION</span><span class="value">RUBY v2.0</span></p>
+
+      </div>
+
+      <!-- RUBY's avatar: a rotating hologram that fills the rest of the panel -->
+      <div class="status-section hologram-section">
+
+        <h4>AVATAR PROJECTION</h4>
+
+        <div class="hologram-wrap">
+
+          <canvas id="hologramCanvas" role="img" aria-label="Rotating hologram of RUBY's avatar"></canvas>
+
+        </div>
+
+        <p><span class="label">PROJECTION</span><span class="value" id="holoState">STABLE</span></p>
 
       </div>
 
@@ -137,6 +169,8 @@
 
         <div class="ring outer"></div>
 
+        <div class="ring ticks"></div>
+
         <div class="ring middle"></div>
 
         <div class="ring inner"></div>
@@ -145,80 +179,106 @@
 
         <div class="core">
 
-          <div class="core-title">
+          <div class="core-title">𝐑𝐔𝐁𝐘</div>
 
-            𝐑𝐔𝐁𝐘
-
-          </div>
-
-          <div
-                  class="core-status"
-                  id="coreStatus">
-
-            STANDBY
-
-          </div>
+          <div class="core-status" id="coreStatus">STANDBY</div>
 
         </div>
 
-        <div class="voice-wave">
-
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-
+        <div class="voice-wave" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
         </div>
 
       </div>
 
-      <button id="listenBtn">
+      <!-- Live subtitles: what you say, and RUBY typing out its reply -->
+      <div id="subtitles" aria-live="polite">
 
-        ACTIVATE
+        <div class="sub-you" id="subYou"></div>
 
-      </button>
+        <div class="sub-ruby" id="subRuby"></div>
+
+      </div>
+
+      <button id="listenBtn" type="button">ACTIVATE</button>
+
+      <form id="commandForm" autocomplete="off">
+
+        <input
+                id="commandInput"
+                type="text"
+                maxlength="500"
+                placeholder="Or type a command..."
+                aria-label="Type a command">
+
+        <button type="submit">SEND</button>
+
+      </form>
+
+      <div id="suggestions" aria-label="Suggested commands"></div>
+
+      <label class="voice-picker">
+
+        VOICE
+
+        <select id="voiceSelect" aria-label="RUBY's voice"></select>
+
+      </label>
+
+      <!-- Holographic result card (weather, Wikipedia) -->
+      <div id="cardStage" aria-live="polite"></div>
 
     </main>
 
     <!-- RIGHT PANEL -->
 
-    <aside class="panel">
+    <aside class="panel hud-frame">
 
       <h3>LIVE DATA</h3>
 
       <div id="clock"></div>
 
-      <div class="radar">
+      <div id="dateLine"></div>
 
-        <div class="sweep"></div>
+      <!-- Holographic globe: your location, or the place you asked about -->
+      <div class="globe-wrap">
 
-        <div id="blips"></div>
+        <canvas id="globeCanvas" role="img" aria-label="Holographic globe showing the current location"></canvas>
+
+        <button id="locateBtn" type="button" title="Show my real location">LOCATE</button>
 
       </div>
 
       <div class="live-section">
 
-        <p>
-          TEMPERATURE .....
-          24°C
-        </p>
+        <h4>COORDINATES</h4>
 
-        <p>
-          LOCATION ........
-          INDIA
-        </p>
+        <p><span class="label">LAT</span><span class="value" id="globeLat">--</span></p>
 
-        <p>
-          VOICE STATUS ....
-          ACTIVE
-        </p>
+        <p><span class="label">LON</span><span class="value" id="globeLon">--</span></p>
 
-        <p>
-          AI STATUS .......
-          ONLINE
-        </p>
+        <p><span class="label">TARGET</span><span class="value" id="globeTarget">--</span></p>
+
+      </div>
+
+      <div class="live-section">
+
+        <h4>WEATHER</h4>
+
+        <p><span class="label">TEMPERATURE</span><span class="value" id="temperature">--</span></p>
+
+        <p><span class="label">CONDITIONS</span><span class="value" id="conditions">--</span></p>
+
+        <p><span class="label">LOCATION</span><span class="value" id="location">--</span></p>
+
+      </div>
+
+      <div class="live-section">
+
+        <h4>ACTIVE TIMERS</h4>
+
+        <div id="timers"><p class="empty">NONE</p></div>
 
       </div>
 
@@ -228,15 +288,11 @@
 
   <!-- CONSOLE -->
 
-  <section class="console">
+  <section class="console hud-frame">
 
     <h3>COMMAND HISTORY</h3>
 
-    <div id="response">
-
-      Awaiting Command...
-
-    </div>
+    <div id="response">Awaiting Command...</div>
 
     <div id="history"></div>
 
@@ -248,9 +304,28 @@
   <source src="/sounds/startup.mp3" type="audio/mpeg">
 </audio>
 
+<script src="sfx.js"></script>
+
+<script src="globe-data.js"></script>
+
+<script src="globe.js"></script>
+
+<script src="hologram.js"></script>
+
 <script src="hud.js"></script>
 
+<script src="voice.js"></script>
+
+<script src="widgets.js"></script>
+
 <script src="app.js"></script>
+
+<script>
+  // Installable app (and the base for the Android APK later).
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+  }
+</script>
 
 </body>
 </html>

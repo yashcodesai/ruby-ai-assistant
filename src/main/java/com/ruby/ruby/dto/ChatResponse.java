@@ -1,39 +1,33 @@
 package com.ruby.ruby.dto;
 
-public class ChatResponse {
+import com.ruby.ruby.command.Card;
+import com.ruby.ruby.command.Reply;
+import com.ruby.ruby.command.TimerSpec;
+import com.ruby.ruby.memory.ConversationMemory;
 
-    private String response;
+import java.util.List;
 
-    private String action;
+/**
+ * @param response      text RUBY says back
+ * @param url           website the browser should open, or null
+ * @param stopListening true if the browser should switch voice mode off
+ * @param card          rich result to display, or null
+ * @param timer         countdown to start, or null
+ * @param cancelTimers  true if the browser should cancel its timers
+ * @param userName      the user's name, or null if not known yet (saved on the device)
+ * @param notes         the user's notes (saved on the device)
+ */
+public record ChatResponse(String response, String url, boolean stopListening,
+                           Card card, TimerSpec timer, boolean cancelTimers,
+                           String userName, List<String> notes) {
 
-    public ChatResponse() {
+    public static ChatResponse of(Reply reply, ConversationMemory memory) {
+        return new ChatResponse(reply.text(), reply.url(), reply.stopListening(),
+                reply.card(), reply.timer(), reply.cancelTimers(),
+                memory.userName().orElse(null), memory.notes());
     }
 
-    public ChatResponse(String response) {
-        this.response = response;
-    }
-
-    public ChatResponse(
-            String response,
-            String action
-    ) {
-        this.response = response;
-        this.action = action;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
+    public static ChatResponse error(String response) {
+        return new ChatResponse(response, null, false, null, null, false, null, null);
     }
 }
